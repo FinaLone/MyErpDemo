@@ -23,7 +23,7 @@ class Role(db.Model):
 #   用户表TUserInfo
 class User(UserMixin, db.Model):
     __tablename__ = 'TUserInfo'
-    user_id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     role_id = db.Column(db.Integer, db.ForeignKey('TRoleInfo.role_id'))
     user_name = db.Column(db.String(64), unique=True, index=True)
     login_time = db.Column(db.DateTime)
@@ -36,10 +36,10 @@ class User(UserMixin, db.Model):
 
     @password.setter
     def password(self, password):
-        self.password_hash = generate_password_hash(password)
+        self.pwd_hash = generate_password_hash(password)
 
     def verify_password(self, password):
-        return check_password_hash(self.password_hash, password)
+        return check_password_hash(self.pwd_hash, password)
 
     def __repr__(self):
         return '<User %r>' % self.user_name
