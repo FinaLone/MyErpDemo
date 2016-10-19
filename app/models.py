@@ -57,4 +57,4 @@ class RegisterCode(db.Model):
     expired_time = db.Column(db.DateTime)
 
     def __repr__(self):
-        return '<User %r>' % self.username
+        return '<code %r>' % self.code
