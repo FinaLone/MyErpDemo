@@ -12,7 +12,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 #   用户角色表roles
 class Role(db.Model):
     __tablename__ = 'TRoleInfo'
-    role_id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True)
     users = db.relationship('User', backref='role', lazy='dynamic')
 
@@ -24,7 +24,7 @@ class Role(db.Model):
 class User(UserMixin, db.Model):
     __tablename__ = 'TUserInfo'
     id = db.Column(db.Integer, primary_key=True)
-    role_id = db.Column(db.Integer, db.ForeignKey('TRoleInfo.role_id'))
+    role_id = db.Column(db.Integer, db.ForeignKey('TRoleInfo.id'))
     user_name = db.Column(db.String(64), unique=True, index=True)
     login_time = db.Column(db.DateTime)
     register_time = db.Column(db.DateTime)
