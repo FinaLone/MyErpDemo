@@ -15,7 +15,7 @@ class Config:
 
     FLASKY_MAIL_SUBJECT_PREFIX = '[MyErpDemo]'                      #邮件标题的前缀
     FLASKY_MAIL_SENDER = 'MyErpDemo Admin <lvwebmail@126.com>'      #显示在发件人栏
-    FLASKY_ADMIN = 'lvwebmail@126.com'
+    FLASKY_ADMIN = 'lvwebmail@126.com'                              #管理员的默认email
 
 
     @staticmethod
