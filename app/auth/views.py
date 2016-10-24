@@ -17,16 +17,17 @@ from .forms import LoginForm, RegistrationForm, ChangePasswordForm,\
 
 @auth.before_app_request
 def before_request():
-    if current_user.is_authenticated() \
-            and not current_user.register_time \
-            and request.endpoint[:5] != 'auth.' \
-            and request.endpoint != 'static':
-        return redirect(url_for('auth.unconfirmed'))
+    if current_user.is_authenticated():
+        current_user.ping()
+        if not current_user.confirmed \
+                and request.endpoint[:5] != 'auth.' \
+                and request.endpoint != 'static':
+            return redirect(url_for('auth.unconfirmed'))
 
 
 @auth.route('/unconfirmed')
 def unconfirmed():
-    if current_user.is_anonymous or current_user.register_time:
+    if current_user.is_anonymous or current_user.confirmed:
         return redirect(url_for('main.index'))
     return render_template('auth/unconfirmed.html')
 
@@ -74,7 +75,7 @@ def register():
 @auth.route('/confirm/<token>')
 @login_required
 def confirm(token):
-    if current_user.register_time:
+    if current_user.confirmed:
         return redirect(url_for('main.index'))
     if current_user.confirm(token):
         flash('账户已确认. 谢谢！')

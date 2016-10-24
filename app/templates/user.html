@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}MyErpDemo - {{ user.user_name }}{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h1>{{ user.user_name }}</h1>
+    {% if user.name or user.location %}
+    <p>
+        {% if user.name %}{{ user.name }}{% endif %}
+        {% if user.location %}
+            来自 <a href="http://map.baidu.com/?newmap=1&s=s%26wd%3D{{ user.location }}%26c%3D289&from=alamap&tpl=mapcity">{{ user.location }}</a>
+        {% endif %}
+    </p>
+    {% endif %}
+
+    {% if user.about_me %}<p>{{ user.about_me }}</p>{% endif %}
+    <p>注册时间：{{ moment(user.register_time).format('L') }}. 上次登录时间：{{ moment(user.login_time).fromNow() }}.</p>
+</div>
+{% endblock %}

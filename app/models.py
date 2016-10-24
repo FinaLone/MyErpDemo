@@ -9,7 +9,7 @@ from flask import current_app
 from flask.ext.login import UserMixin, AnonymousUserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
-import datetime
+from datetime import datetime
 
 
 #   用户权限表
@@ -63,9 +63,12 @@ class User(UserMixin, db.Model):
     role_id = db.Column(db.Integer, db.ForeignKey('TRoleInfo.id'))
     email = db.Column(db.String(64), unique=True, index=True)
     user_name = db.Column(db.String(64), unique=True, index=True)
-    login_time = db.Column(db.DateTime)
-    register_time = db.Column(db.DateTime)
+    login_time = db.Column(db.DateTime, default=datetime.now())    #最后一次登录时间
+    register_time = db.Column(db.DateTime, default=datetime.now()) #注册时间
     pwd_hash = db.Column(db.String(128))
+    name = db.Column(db.String(64))
+    confirmed = db.Column(db.Boolean, default=False)
+    location = db.Column(db.String(64))
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
@@ -98,7 +101,7 @@ class User(UserMixin, db.Model):
             return False
         if data.get('confirm') != self.id:
             return False
-        self.register_time = datetime.datetime.now()
+        self.confirmed = True
         db.session.add(self)
         return True
 
@@ -146,10 +149,16 @@ class User(UserMixin, db.Model):
     def is_administrator(self):
         return self.can(Permission.ADMINISTER)
 
+    def ping(self):
+        self.last_seen = datetime.now()
+        db.session.add(self)
+
     def __repr__(self):
         return '<User %r>' % self.user_name
 
+#   默认用户
 class AnonymousUser(AnonymousUserMixin):
+
     def can(self, permissions):
         return False
 
