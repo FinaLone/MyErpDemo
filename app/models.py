@@ -69,6 +69,7 @@ class User(UserMixin, db.Model):
     name = db.Column(db.String(64))
     confirmed = db.Column(db.Boolean, default=False)
     location = db.Column(db.String(64))
+    about_me = db.Column(db.Text())
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
