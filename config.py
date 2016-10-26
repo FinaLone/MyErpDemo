@@ -11,11 +11,12 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 class Config:
     SECRET_KEY = 'you do not know the key'
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
+    AVATAR_FOLDER = os.path.join(basedir, r'app\static\avatar')             #'F:\\PythonLib\\MyErpDemo\\app\\static\\avatar'
+    ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
-
-    FLASKY_MAIL_SUBJECT_PREFIX = '[MyErpDemo]'                      #邮件标题的前缀
-    FLASKY_MAIL_SENDER = 'MyErpDemo Admin <lvwebmail@126.com>'      #显示在发件人栏
-    FLASKY_ADMIN = 'lvwebmail@126.com'                              #管理员的默认email
+    FLASKY_MAIL_SUBJECT_PREFIX = '[MyErpDemo]'                              #邮件标题的前缀
+    FLASKY_MAIL_SENDER = 'MyErpDemo Admin <lvwebmail@126.com>'              #显示在发件人栏
+    FLASKY_ADMIN = 'lvwebmail@126.com'                                      #管理员的默认email
 
 
     @staticmethod

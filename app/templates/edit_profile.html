@@ -8,6 +8,17 @@
     <h1>资料编辑</h1>
 </div>
 <div class="col-md-4">
+<!--
     {{ wtf.quick_form(form) }}
+        {{ form.hidden_tag() }}
+        {{ form.name }}
+        {{ form.location }}
+        {{ form.about_me }}
+        {{ form.avatar }}
+-->
+    <form action="/edit-profile" method="POST" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        {{ wtf.quick_form(form) }}
+    </form>
 </div>
 {% endblock %}
