@@ -37,8 +37,9 @@ def edit_profile():
         db.session.add(current_user)
 
         filename = form.avatar.data.filename
+        filetype = os.path.splitext(filename)[1]
         app = current_app._get_current_object()
-        form.avatar.data.save(os.path.join(app.config['AVATAR_FOLDER'], filename))
+        form.avatar.data.save(os.path.join(app.config['AVATAR_FOLDER'], current_user.user_name + filetype))
 
         flash('Your profile has been updated.')
         return redirect(url_for('.user', username=current_user.user_name))
@@ -74,29 +75,3 @@ def edit_profile_admin(id):
     form.about_me.data = user.about_me
     return render_template('edit_profile.html', form=form, user=user)
 
-"""
-
-
-def allowed_file(filename):
-    app = current_app._get_current_object()
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1] in app.config['ALLOWED_EXTENSIONS']
-
-@main.route('/upload_avatar', methods=['GET', 'POST'])
-@login_required
-def upload_avatar():
-    app = current_app._get_current_object()
-    if request.method == 'POST':
-        print "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~post~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-        file = request.files['file']
-        if file and allowed_file(file.filename):
-            filename = file.filename
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            flash("Photo saved.")
-            return redirect(url_for('.user', username=current_user.user_name))
-    print "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~get~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-    return redirect(url_for('upload_avatar'))
-    return redirect(url_for('.user', username=current_user.user_name))
-
-
-"""

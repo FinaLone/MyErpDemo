@@ -14,7 +14,7 @@
     </p>
     {% endif %}
 
-    <img class="img-rounded profile-thumbnail" src="{{ url_for('static', filename='avatar/blackcat-redeyes.jpg') }}">
+    <img class="img-rounded profile-thumbnail" src="{{ url_for('static', filename='avatar/'+user.user_name+'.jpg') }}">
 
     {% if user.about_me %}<p>{{ user.about_me }}</p>{% endif %}
     <p>注册时间：{{ moment(user.register_time).format('L') }}. 上次登录时间：{{ moment(user.login_time).fromNow() }}.</p>
