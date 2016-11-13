@@ -14,10 +14,9 @@ from datetime import datetime
 
 #   用户权限表
 class Permission:
-    FOLLOW = 0x01
-    COMMENT = 0x02
-    WRITE_ARTICLES = 0x04
-    MODERATE_COMMENTS = 0x08
+    WORKPLAN = 0x01
+    CLIENTINFO = 0x02
+
     ADMINISTER = 0x80
 
 
@@ -34,14 +33,9 @@ class Role(db.Model):
     @staticmethod
     def insert_roles():
         roles = {
-            'User': (Permission.FOLLOW |
-                     Permission.COMMENT |
-                     Permission.WRITE_ARTICLES, True),
-            'Moderator': (Permission.FOLLOW |
-                          Permission.COMMENT |
-                          Permission.WRITE_ARTICLES |
-                          Permission.MODERATE_COMMENTS, False),
-            'Administrator': (0xff, False)
+            'SuperAdmin': (0xff, False),
+            'AM':(Permission.WORKPLAN |
+                  Permission.CLIENTINFO, False)
         }
         for r in roles:
             role = Role.query.filter_by(name=r).first()
