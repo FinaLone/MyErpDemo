@@ -12,4 +12,9 @@ from . import account_manager as am
 
 @am.route('/workplan')
 def workplan():
-    return render_template('workplan.html')
+    return render_template('account_manager/workplan.html')
+
+
+@am.route('/wpcomplete')
+def wpcomplete():
+    return render_template('account_manager/wpcomplete.html')
