@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block title %}销售成本统计{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h1>Hello, {% if current_user.is_authenticated() %}{{ current_user.user_name }}{% else %}Stranger{% endif %}!</h1>
+        <h2>我得销售成本显示页面</h2>
+</div>
+{% endblock %}

@@ -18,3 +18,33 @@ def workplan():
 @am.route('/wpcomplete')
 def wpcomplete():
     return render_template('account_manager/wpcomplete.html')
+
+
+@am.route('/costofsales')
+def costofsales():
+    return render_template('account_manager/costofsales.html')
+
+
+@am.route('/clientinfo_new')
+def clientinfo_new():
+    return render_template('account_manager/clientinfo_new.html')
+
+
+@am.route('/clientinfo_search')
+def clientinfo_search():
+    return render_template('account_manager/clientinfo_search.html')
+
+
+@am.route('/clientinfo_net')
+def clientinfo_net():
+    return render_template('account_manager/clientinfo_net.html')
+
+
+@am.route('/qa_list')
+def qa_list():
+    return render_template('account_manager/qa_list.html')
+
+
+@am.route('/qa_new')
+def qa_new():
+    return render_template('account_manager/qa_new.html')

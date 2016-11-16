@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block title %}客户关系管理{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h1>Hello, {% if current_user.is_authenticated() %}{{ current_user.user_name }}{% else %}Stranger{% endif %}!</h1>
+        <h2>客户关系查询页面，主要用于二次开发。</h2>
+</div>
+{% endblock %}
