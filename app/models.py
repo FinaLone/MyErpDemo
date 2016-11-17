@@ -53,16 +53,17 @@ class Role(db.Model):
 #   用户表TUserInfo
 class User(UserMixin, db.Model):
     __tablename__ = 'TUserInfo'
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)                    #用户编号,最好是自动生成，不能修改
+                                                                    #如果有冻结账户的需要，另设flag位
     role_id = db.Column(db.Integer, db.ForeignKey('TRoleInfo.id'))
     email = db.Column(db.String(64), unique=True, index=True)
-    user_name = db.Column(db.String(64), unique=True, index=True)
-    login_time = db.Column(db.DateTime, default=datetime.now())    #最后一次登录时间
-    register_time = db.Column(db.DateTime, default=datetime.now()) #注册时间
+    user_name = db.Column(db.String(64), unique=True, index=True)   #登陆用用户名
+    login_time = db.Column(db.DateTime, default=datetime.now())     #最后一次登录时间
+    register_time = db.Column(db.DateTime, default=datetime.now())  #注册时间
     pwd_hash = db.Column(db.String(128))
-    name = db.Column(db.String(64))
+    name = db.Column(db.String(64))                                 #姓名
     confirmed = db.Column(db.Boolean, default=False)
-    location = db.Column(db.String(64))
+    location = db.Column(db.String(64))                             #籍贯
     about_me = db.Column(db.Text())
 
     def __init__(self, **kwargs):
@@ -176,3 +177,7 @@ class RegisterCode(db.Model):
 
     def __repr__(self):
         return '<code %r>' % self.code
+
+
+class ClientInfo(db.Model):
+    pass
