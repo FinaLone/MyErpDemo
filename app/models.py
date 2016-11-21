@@ -180,4 +180,28 @@ class RegisterCode(db.Model):
 
 
 class ClientInfo(db.Model):
-    pass
+    __tablename__ = 'TClientInfo'
+    id = db.Column(db.Integer, primary_key=True, index=True)
+    am_id = db.Column(db.Integer, db.ForeignKey('TUserInfo.id'))
+    flag = db.Column(db.Integer, default=0)                                 #标志位，默认为0
+    name = db.Column(db.String)                                             #姓名,默认为未知
+    sex = db.Column(db.Integer, default=0)                                  #性别，1为女2为男0为未知
+    preference = db.Column(db.String)                                       #投资偏好
+    race = db.Column(db.String)                                             #民族,默认为汉
+    id_number = db.Column(db.String, unique=True)                           #身份证号
+    birthday = db.Column(db.DATE)                                           #出生日期
+    account_number = db.Column(db.Integer)                                  #交易账号
+    phone_1 = db.Column(db.String)                                          #常用电话1
+    phone_2 = db.Column(db.String)                                          #常用电话2
+    phone_3 = db.Column(db.String)                                          #常用电话3
+    qq = db.Column(db.Integer)                                              #QQ
+    weixin = db.Column(db.String)                                           #微信
+    email = db.Column(db.String)                                            #email
+    occupation = db.Column(db.String)                                       #职业
+    workplace = db.Column(db.String)                                        #工作单位
+    home = db.Column(db.String)                                             #家庭住址
+    hobby = db.Column(db.String)                                            #业余爱好
+
+    def __repr__(self):
+        return '<客户: %r>' % self.name
+

@@ -8,6 +8,7 @@ import os
 from flask import render_template, redirect, url_for, abort, flash, request, current_app
 from flask.ext.login import login_required, current_user
 from . import account_manager as am
+from .forms import ClientInfoForm
 
 
 @am.route('/workplan')
@@ -27,7 +28,8 @@ def costofsales():
 
 @am.route('/clientinfo_new')
 def clientinfo_new():
-    return render_template('account_manager/clientinfo_new.html')
+    form = ClientInfoForm()
+    return render_template('account_manager/clientinfo_new.html', form=form)
 
 
 @am.route('/clientinfo_search')
