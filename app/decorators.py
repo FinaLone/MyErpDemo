@@ -23,3 +23,6 @@ def permission_required(permission):                #使用Permission.*作为参
 
 def admin_required(f):
     return permission_required(Permission.ADMINISTER)(f)
+
+def am_required(f):
+    return permission_required(Permission.ACCOUNTMANAGER)

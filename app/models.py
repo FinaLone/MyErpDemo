@@ -17,6 +17,7 @@ class Permission:
     WORKPLAN = 0x01
     CLIENTINFO = 0x02
 
+    ACCOUNTMANAGER = 0x0F
     ADMINISTER = 0x80
 
 
@@ -144,6 +145,9 @@ class User(UserMixin, db.Model):
 
     def is_administrator(self):
         return self.can(Permission.ADMINISTER)
+
+    def is_accountmanager(self):
+        return self.can(Permission.ACCOUNTMANAGER)
 
     def ping(self):
         self.last_seen = datetime.now()

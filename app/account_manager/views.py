@@ -6,9 +6,11 @@ sys.setdefaultencoding('utf8')
 
 import os
 from flask import render_template, redirect, url_for, abort, flash, request, current_app
-from flask.ext.login import login_required, current_user
+from flask_login import login_user, logout_user, login_required, current_user
 from . import account_manager as am
+from .. import db
 from .forms import ClientInfoForm
+from ..models import ClientInfo
 
 
 @am.route('/workplan')
@@ -26,9 +28,36 @@ def costofsales():
     return render_template('account_manager/costofsales.html')
 
 
-@am.route('/clientinfo_new')
+@am.route('/clientinfo_new', methods=['GET', 'POST'])
 def clientinfo_new():
     form = ClientInfoForm()
+    if form.validate_on_submit():
+        my_amid = current_user.id
+        newclientinfo = ClientInfo(
+            am_id = my_amid,
+            flag = int(form.flag.data),
+            name = form.name.data,
+            sex = form.sex.data,
+            preference = form.preference.data,
+            race = form.race.data,
+            id_number = form.id_number.data,
+            birthday = form.birthday.data,
+            account_number = form.account_number.data,
+            phone_1 = form.phone_1.data,
+            phone_2 = form.phone_2.data,
+            phone_3 = form.phone_3.data,
+            qq = form.qq.data,
+            weixin = form.weixin.data,
+            email = form.email.data,
+            occupation = form.occupation.data,
+            workplace = form.workplace.data,
+            home = form.home.data,
+            hobby = form.hobby.data
+        )
+        db.session.add(newclientinfo)
+        db.session.commit()
+        flash('客户信息添加成功！')
+        return redirect(url_for('account_manager.clientinfo_new'))
     return render_template('account_manager/clientinfo_new.html', form=form)
 
 
