@@ -67,6 +67,8 @@ class User(UserMixin, db.Model):
     location = db.Column(db.String(64))                             #籍贯
     about_me = db.Column(db.Text())
 
+    clients = db.relationship('ClientInfo', backref='am', lazy='dynamic')
+
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
         if self.role is None:
@@ -207,5 +209,5 @@ class ClientInfo(db.Model):
     hobby = db.Column(db.String)                                            #业余爱好
 
     def __repr__(self):
-        return '<客户: %r>' % self.name
+        return '<ClientInfo: %r>' % self.name
 

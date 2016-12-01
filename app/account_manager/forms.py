@@ -14,9 +14,9 @@ from ..models import ClientInfo
 
 
 class ClientInfoForm(Form):
-    flag = SelectField('客户类型',choices=[('1','已开户'),('0','未开户')])
+    flag = SelectField('客户类型', choices=[('1','已开户'),('0','未开户')])
     name = StringField('姓名', validators=[Required(), Length(1, 64)])
-    sex = StringField('性别')
+    sex = StringField('性别', choices=[('0',"未知"),('1',"女"),('2',"男")])
     preference = StringField('投资偏好')
     race = StringField('民族')
     id_number = StringField('身份证号', default='')
@@ -41,3 +41,12 @@ class ClientInfoForm(Form):
     def validate_account_number(self, field):           #验证用户账户
         if not ClientInfo.query.filter_by(account_number=field.data).first() is None:
             raise ValidationError('用户账户已注册过，请检查！')
+
+class ClientSearchForm(Form):
+    flag = SelectField('客户类型',choices=[('1','已开户'),('0','未开户')])
+    name = StringField('姓名', validators=[Required(), Length(1, 64)])
+    sex = StringField('性别', default='')
+    preference = StringField('投资偏好', default='')
+    race = StringField('民族', default='')
+    phone = StringField('电话', default='')
+    submit = SubmitField('查询', default='')

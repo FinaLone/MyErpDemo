@@ -9,7 +9,7 @@ from flask import render_template, redirect, url_for, abort, flash, request, cur
 from flask_login import login_user, logout_user, login_required, current_user
 from . import account_manager as am
 from .. import db
-from .forms import ClientInfoForm
+from .forms import ClientInfoForm, ClientSearchForm
 from ..models import ClientInfo
 
 
@@ -61,8 +61,21 @@ def clientinfo_new():
     return render_template('account_manager/clientinfo_new.html', form=form)
 
 
-@am.route('/clientinfo_search')
+@am.route('/clientinfo_search', methods=['GET', 'POST'])
 def clientinfo_search():
+    form = ClientSearchForm()
+    if form.validate_on_submit():
+        am_id = current_user.id
+        flag = form.flag.data
+        name = form.name.data
+        sex = form.sex.data
+        preference = form.preference.data
+        race = form.race.data
+        phone = form.phone.data
+    #User.query.filter(User.user_name.like('%'+b+'%')).first()
+
+
+
     return render_template('account_manager/clientinfo_search.html')
 
 
