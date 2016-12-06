@@ -66,6 +66,8 @@ class User(UserMixin, db.Model):
     confirmed = db.Column(db.Boolean, default=False)
     location = db.Column(db.String(64))                             #籍贯
     about_me = db.Column(db.Text())
+    question = db.relationship('Question', backref='author', lazy='dynamic')
+    answer = db.relationship('Answer', backref='author', lazy='dynamic')
 
     clients = db.relationship('ClientInfo', backref='am', lazy='dynamic')
 
@@ -211,3 +213,30 @@ class ClientInfo(db.Model):
     def __repr__(self):
         return '<ClientInfo: %r>' % self.name
 
+# 问题列表 luhao add 16.11.17
+class Question(db.Model):
+    __tablename__ = 'questions'
+    id = db.Column(db.Integer, primary_key = True)
+    title = db.Column(db.String)
+    body = db.Column(db.Text)
+    timestamp = db.Column(db.DateTime, index = True, default = datetime.utcnow())
+    author_id = db.Column(db.Integer, db.ForeignKey('TUserInfo.id'))
+
+    answers = db.relationship('Answer', backref='question', lazy='dynamic')
+
+
+#评论  luhao add 16.11.17
+class Answer(db.Model):
+    __tablename__ = 'answers'
+    id = db.Column(db.Integer, primary_key = True)
+    body = db.Column(db.Text)
+    body_html = db.Column(db.Text)
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow())
+    disabled = db.Column(db.Boolean)
+    author_id = db.Column(db.Integer, db.ForeignKey('TUserInfo.id'))
+    question_id = db.Column(db.Integer, db.ForeignKey('questions.id'))
+
+    #编辑器
+    @staticmethod
+    def on_changed_body(target, value, oldvalue, initiator):
+        allowed_tags = ['a', 'abbr', 'acronym', 'b', 'code', 'em', 'i', 'strong']
