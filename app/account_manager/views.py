@@ -9,8 +9,8 @@ from flask import render_template, redirect, url_for, abort, flash, request, cur
 from flask_login import login_user, logout_user, login_required, current_user
 from . import account_manager as am
 from .. import db
-from .forms import ClientInfoForm, ClientSearchForm
-from ..models import ClientInfo
+from .forms import ClientInfoForm, ClientSearchForm, QuestionForm, AnswerForm
+from ..models import ClientInfo, Question, Answer
 
 
 @am.route('/workplan')
@@ -84,11 +84,47 @@ def clientinfo_net():
     return render_template('account_manager/clientinfo_net.html')
 
 
-@am.route('/qa_list')
+@am.route('/qa_list', methods=["GET", "POST"])
 def qa_list():
-    return render_template('account_manager/qa_list.html')
+    form = QuestionForm()
+    if form.validate_on_submit():
+        question = Question(title=form.title.data,
+                    body=form.body.data,
+                    author=current_user._get_current_object())
+        db.session.add(post)
+        return redirect(url_for('.qa_list'))
+    questions = Question.query.order_by(Question.timestamp.desc()).all()
+
+    page = request.args.get('page',1,type=int)
+    pagination = Question.query.order_by(Question.timestamp.desc()).paginate(
+        page, per_page=10, error_out=False)
+    questions = pagination.items
+    return render_template('account_manager/qa_list.html',  form=form, questions=questions, pagination=pagination)
 
 
-@am.route('/qa_new')
+@am.route('/qa_new', methods=["GET", "POST"])
 def qa_new():
-    return render_template('account_manager/qa_new.html')
+    form = QuestionForm()
+    if form.validate_on_submit():
+        question = Question(title=form.title.data,
+                    body=form.body.data,
+                    author=current_user._get_current_object())
+        db.session.add(question)
+        return redirect(url_for('.qa_list'))
+    return render_template('account_manager/qa_new.html', form=form)
+
+@am.route('/qa/<qno>', methods=["GET", "POST"])
+def qa_detail(qno):
+    question = Question.query.filter_by(id=qno).first()
+    if question is None:
+        abort(404)
+    form = AnswerForm()
+    if form.validate_on_submit():
+        answer = Answer(body = form.body.data,
+                          question = question,
+                          author = current_user._get_current_object())
+        db.session.add(answer)
+        flash('已回答')
+        return redirect(url_for('.qa_detail', qno=question.id))
+    answers = question.answers.order_by(Answer.timestamp.asc())
+    return render_template('account_manager/qa_detail.html', question=question, form = form, answers = answers)
