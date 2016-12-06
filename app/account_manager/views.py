@@ -37,7 +37,7 @@ def clientinfo_new():
             am_id = my_amid,
             flag = int(form.flag.data),
             name = form.name.data,
-            sex = form.sex.data,
+            sex = int(form.sex.data),
             preference = form.preference.data,
             race = form.race.data,
             id_number = form.id_number.data,
@@ -46,7 +46,7 @@ def clientinfo_new():
             phone_1 = form.phone_1.data,
             phone_2 = form.phone_2.data,
             phone_3 = form.phone_3.data,
-            qq = form.qq.data,
+            qq = int(form.qq.data),
             weixin = form.weixin.data,
             email = form.email.data,
             occupation = form.occupation.data,
@@ -66,17 +66,25 @@ def clientinfo_search():
     form = ClientSearchForm()
     if form.validate_on_submit():
         am_id = current_user.id
-        flag = form.flag.data
+        flag = int(form.flag.data)
         name = form.name.data
-        sex = form.sex.data
+        sex = int(form.sex.data)
         preference = form.preference.data
         race = form.race.data
         phone = form.phone.data
-    #User.query.filter(User.user_name.like('%'+b+'%')).first()
-
-
-
-    return render_template('account_manager/clientinfo_search.html')
+        #User.query.filter(User.user_name.like('%'+b+'%')).first()
+        findlist = ClientInfo.query.filter(db.and_(ClientInfo.am_id==am_id,
+                                                ClientInfo.flag==flag,
+                                                ClientInfo.name.like("%"+name+"%"),
+                                                ClientInfo.sex==sex,
+                                                ClientInfo.preference.like("%"+preference+"%"),
+                                                ClientInfo.race.like("%"+race+"%")
+                                                )).all()        #电话先不考虑ClientInfo.phone.like("%"+phone+"%")
+        if findlist==[]:
+            flash("hehe")
+            #return redirect(url_for('clientinfo_search'))
+        flash(len(findlist))
+    return render_template('account_manager/clientinfo_search.html',form=form)
 
 
 @am.route('/clientinfo_net')
@@ -91,9 +99,9 @@ def qa_list():
         question = Question(title=form.title.data,
                     body=form.body.data,
                     author=current_user._get_current_object())
-        db.session.add(post)
+        db.session.add(question)
         return redirect(url_for('.qa_list'))
-    questions = Question.query.order_by(Question.timestamp.desc()).all()
+    #questions = Question.query.order_by(Question.timestamp.desc()).all()
 
     page = request.args.get('page',1,type=int)
     pagination = Question.query.order_by(Question.timestamp.desc()).paginate(

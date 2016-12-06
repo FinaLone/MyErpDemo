@@ -68,7 +68,6 @@ class User(UserMixin, db.Model):
     about_me = db.Column(db.Text())
     question = db.relationship('Question', backref='author', lazy='dynamic')
     answer = db.relationship('Answer', backref='author', lazy='dynamic')
-
     clients = db.relationship('ClientInfo', backref='am', lazy='dynamic')
 
     def __init__(self, **kwargs):

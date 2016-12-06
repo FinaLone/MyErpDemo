@@ -14,9 +14,9 @@ from ..models import ClientInfo
 
 
 class ClientInfoForm(Form):
-    flag = SelectField('客户类型', choices=[('1','已开户'),('0','未开户')])
+    flag = SelectField('客户类型', choices=[('1','已开户'),('0','未开户')], default='0')
     name = StringField('姓名', validators=[Required(), Length(1, 64)])
-    sex = StringField('性别', choices=[('0',"未知"),('1',"女"),('2',"男")])
+    sex = SelectField('性别', choices=[('0',"未知"),('1',"女"),('2',"男")], default='0')
     preference = StringField('投资偏好')
     race = StringField('民族')
     id_number = StringField('身份证号', default='')
@@ -43,9 +43,9 @@ class ClientInfoForm(Form):
             raise ValidationError('用户账户已注册过，请检查！')
 
 class ClientSearchForm(Form):
-    flag = SelectField('客户类型',choices=[('1','已开户'),('0','未开户')])
-    name = StringField('姓名', validators=[Required(), Length(1, 64)])
-    sex = StringField('性别', default='')
+    flag = SelectField('客户类型',choices=[('1','已开户'),('0','未开户')], default='0')
+    name = StringField('姓名', validators=[Required(), Length(1, 64)], default='')
+    sex = SelectField('性别', choices=[('0',"未知"),('1',"女"),('2',"男")], default='0')
     preference = StringField('投资偏好', default='')
     race = StringField('民族', default='')
     phone = StringField('电话', default='')
