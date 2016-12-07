@@ -5,7 +5,8 @@ reload(sys)
 sys.setdefaultencoding('utf8')
 
 import os
-from flask import render_template, redirect, url_for, abort, flash, request, current_app
+import json
+from flask import render_template, redirect, url_for, abort, flash, request, current_app, jsonify
 from flask_login import login_user, logout_user, login_required, current_user
 from . import account_manager as am
 from .. import db
@@ -64,27 +65,34 @@ def clientinfo_new():
 @am.route('/clientinfo_search', methods=['GET', 'POST'])
 def clientinfo_search():
     form = ClientSearchForm()
-    if form.validate_on_submit():
-        am_id = current_user.id
-        flag = int(form.flag.data)
-        name = form.name.data
-        sex = int(form.sex.data)
-        preference = form.preference.data
-        race = form.race.data
-        phone = form.phone.data
-        #User.query.filter(User.user_name.like('%'+b+'%')).first()
-        findlist = ClientInfo.query.filter(db.and_(ClientInfo.am_id==am_id,
-                                                ClientInfo.flag==flag,
-                                                ClientInfo.name.like("%"+name+"%"),
-                                                ClientInfo.sex==sex,
-                                                ClientInfo.preference.like("%"+preference+"%"),
-                                                ClientInfo.race.like("%"+race+"%")
-                                                )).all()        #电话先不考虑ClientInfo.phone.like("%"+phone+"%")
-        if findlist==[]:
-            flash("hehe")
-            #return redirect(url_for('clientinfo_search'))
-        flash(len(findlist))
     return render_template('account_manager/clientinfo_search.html',form=form)
+
+@am.route('/clientinfo_search_sql', methods=['GET', 'POST'])
+def clientinfo_search_sql():
+    data = request.get_data()
+    #flash('1'+data)
+    data = json.loads(data)
+    am_id = current_user.id
+    findlist = ClientInfo.query.filter(db.and_(ClientInfo.am_id == am_id,
+                                        ClientInfo.flag==int(data['flag']),
+                                        ClientInfo.name.like("%"+data['name']+"%"),
+                                        ClientInfo.sex==data['sex'],
+                                        ClientInfo.preference.like("%"+data['preference']+"%"),
+                                        ClientInfo.race.like("%"+data['race']+"%")
+                                        )).all()        #电话先不考虑ClientInfo.phone.like("%"+phone+"%")
+    return_data = ''
+    return_data += '{len:'
+    return_data += str(len(findlist))
+    return_data += ',data:['
+    if len(findlist) is not 0:
+        for item in findlist:
+            return_data += json.dumps(item.to_json())
+            return_data += ','
+
+        return_data = return_data[:-1]
+    return_data += ']}'
+    return return_data
+    #return '1'
 
 
 @am.route('/clientinfo_net')

@@ -49,7 +49,7 @@ class ClientSearchForm(Form):
     preference = StringField('投资偏好', default='')
     race = StringField('民族', default='')
     phone = StringField('电话', default='')
-    submit = SubmitField('查询', default='')
+    #submit = SubmitField('查询', default='')
 
 #发布文章/提问表单
 class QuestionForm(Form):

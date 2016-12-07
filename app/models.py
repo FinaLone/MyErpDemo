@@ -212,6 +212,13 @@ class ClientInfo(db.Model):
     def __repr__(self):
         return '<ClientInfo: %r>' % self.name
 
+    def to_json(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'sex': self.sex,
+        }
+
 # 问题列表 luhao add 16.11.17
 class Question(db.Model):
     __tablename__ = 'questions'
