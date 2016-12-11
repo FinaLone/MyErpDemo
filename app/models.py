@@ -69,6 +69,7 @@ class User(UserMixin, db.Model):
     question = db.relationship('Question', backref='author', lazy='dynamic')
     answer = db.relationship('Answer', backref='author', lazy='dynamic')
     clients = db.relationship('ClientInfo', backref='am', lazy='dynamic')
+    workplan = db.relationship('WorkPlan', backref='am', lazy='dynamic')
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
@@ -185,7 +186,7 @@ class RegisterCode(db.Model):
     def __repr__(self):
         return '<code %r>' % self.code
 
-
+#客户信息表
 class ClientInfo(db.Model):
     __tablename__ = 'TClientInfo'
     id = db.Column(db.Integer, primary_key=True, index=True)
@@ -246,3 +247,21 @@ class Answer(db.Model):
     @staticmethod
     def on_changed_body(target, value, oldvalue, initiator):
         allowed_tags = ['a', 'abbr', 'acronym', 'b', 'code', 'em', 'i', 'strong']
+
+#工作计划
+class WorkPlan(db.Model):
+    __tablename__ = 'workplan'
+    id = db.Column(db.Integer, primary_key = True, index=True)
+    am_id = db.Column(db.Integer, db.ForeignKey('TUserInfo.id'))
+    todaydate = db.Column(db.DATE)
+    tommorrowdate = db.Column(db.DATE)
+    client_contact = db.Column(db.Integer)
+    capital_increment = db.Column(db.Integer)
+    volume = db.Column(db.Integer)
+    other_info = db.Column(db.Text)
+
+    def __repr__(self):
+        return '<WorkPlan %r>' % self.todaydate
+    def yanzheng(self):
+        #这里得有一个对同一个user对同一个日期只能存在一条记录的验证功能
+        pass

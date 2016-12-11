@@ -7,8 +7,8 @@ sys.setdefaultencoding('utf8')
 
 from flask.ext.wtf import Form
 #from flask.ext.admin.form import widgets
-from wtforms import StringField, BooleanField, SubmitField, DateField, SelectField, TextAreaField
-from wtforms.validators import Required, Length, Email, Regexp, EqualTo
+from wtforms import StringField, IntegerField, SubmitField, DateField, SelectField, TextAreaField
+from wtforms.validators import Required, Length, Email, Regexp, NumberRange
 from wtforms import ValidationError
 from ..models import ClientInfo
 
@@ -61,3 +61,15 @@ class QuestionForm(Form):
 class AnswerForm(Form):
     body = TextAreaField('回答', validators=[Required()])
     submit = SubmitField('提交')
+
+#工作计划录入
+class WorkPlan(Form):
+    client_contact = IntegerField('拜访，电话联系客户数量', validators=[Required(), NumberRange(min=0)])
+    capital_increment = IntegerField('客户新增资金量', validators=[Required(), NumberRange(min=0)])
+    volume = IntegerField('成交量', validators=[Required(), NumberRange(min=0)])
+    other_info = TextAreaField('其他')
+
+#计划任务完成情况
+class WorkPlan(Form):
+    pass
+

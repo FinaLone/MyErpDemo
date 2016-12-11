@@ -7,11 +7,14 @@
 <div class="page-header">
     <h1>Hello, {% if current_user.is_authenticated() %}{{ current_user.user_name }}{% else %}Stranger{% endif %}!</h1>
         <h2>这里是客户信息查询页面</h2>
-        {{ wtf.quick_form(form) }}
+</div>
+<div class="col-md-4">
+    {{ wtf.quick_form(form) }}
     <input class="btn btn-default" type="button" id="submit" value="查询"/>
 </div>
-<div class="show-result" id="result">
-
+<div class="col-md-8">
+    <h3>这里是查询结果</h3>
+    <div class="show-result" id="result"></div>
 </div>
 {% endblock %}
 {% block scripts %}
