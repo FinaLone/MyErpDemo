@@ -264,4 +264,5 @@ class WorkPlan(db.Model):
         return '<WorkPlan %r>' % self.todaydate
     def yanzheng(self):
         #这里得有一个对同一个user对同一个日期只能存在一条记录的验证功能
+        #还得有一个没有连续记录时候的补充功能
         pass

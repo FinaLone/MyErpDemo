@@ -63,13 +63,14 @@ class AnswerForm(Form):
     submit = SubmitField('提交')
 
 #工作计划录入
-class WorkPlan(Form):
+class WorkPlanForm(Form):
     client_contact = IntegerField('拜访，电话联系客户数量', validators=[Required(), NumberRange(min=0)])
     capital_increment = IntegerField('客户新增资金量', validators=[Required(), NumberRange(min=0)])
     volume = IntegerField('成交量', validators=[Required(), NumberRange(min=0)])
     other_info = TextAreaField('其他')
+    submit = SubmitField('提交')
 
 #计划任务完成情况
-class WorkPlan(Form):
+class WorkComplete(Form):
     pass
 

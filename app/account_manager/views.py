@@ -6,17 +6,34 @@ sys.setdefaultencoding('utf8')
 
 import os
 import json
+from datetime import datetime, timedelta
 from flask import render_template, redirect, url_for, abort, flash, request, current_app, jsonify
 from flask_login import login_user, logout_user, login_required, current_user
 from . import account_manager as am
 from .. import db
-from .forms import ClientInfoForm, ClientSearchForm, QuestionForm, AnswerForm
-from ..models import ClientInfo, Question, Answer
+from .forms import ClientInfoForm, ClientSearchForm, QuestionForm, AnswerForm, WorkPlanForm, WorkComplete
+from ..models import ClientInfo, Question, Answer, WorkPlan
 
 
-@am.route('/workplan')
+@am.route('/workplan', methods=["GET", "POST"])
 def workplan():
-    return render_template('account_manager/workplan.html')
+    form = WorkPlanForm()
+    if form.validate_on_submit():
+        my_amid = current_user.id
+        newworkplan = WorkPlan(
+            am_id = my_amid,
+            todaydate = datetime.now().date(),
+            tommorrowdate = datetime.now().date() + timedelta(days=1),
+            client_contact = form.client_contact.data,
+            capital_increment = form.capital_increment.data,
+            volume = form.volume.data,
+            other_info = form.other_info.data
+        )
+        db.session.add(newworkplan)
+        db.session.commit()
+        flash('工作计划添加成功！')
+        return redirect(url_for('account_manager.workplan'))
+    return render_template('account_manager/workplan.html', form=form)
 
 
 @am.route('/wpcomplete')
@@ -144,3 +161,4 @@ def qa_detail(qno):
         return redirect(url_for('.qa_detail', qno=question.id))
     answers = question.answers.order_by(Answer.timestamp.asc())
     return render_template('account_manager/qa_detail.html', question=question, form = form, answers = answers)
+
