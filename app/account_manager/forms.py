@@ -71,6 +71,17 @@ class WorkPlanForm(Form):
     submit = SubmitField('提交')
 
 #计划任务完成情况
-class WorkComplete(Form):
-    pass
+class WorkCompleteForm(Form):
+    plan_client_contact = IntegerField('拜访，电话联系客户计划数')
+    plan_capital_increment = IntegerField('客户新增资金计划数')
+    plan_volume = IntegerField('计划成交量')
+    plan_other_info = TextAreaField('其他计划')
+
+    complete_client_contact = IntegerField('拜访，电话联系客户完成数量', validators=[Required(), NumberRange(min=0)])
+    complete_capital_increment = IntegerField('客户新增资金完成量', validators=[Required(), NumberRange(min=0)])
+    complete_volume = IntegerField('实际成交量', validators=[Required(), NumberRange(min=0)])
+    complete_other_info = TextAreaField('其他完成事项')
+
+    submit = SubmitField('提交')
+
 

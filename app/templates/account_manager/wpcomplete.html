@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
 
 {% block title %}完成情况统计{% endblock %}
 
@@ -6,5 +7,22 @@
 <div class="page-header">
     <h1>Hello, {% if current_user.is_authenticated() %}{{ current_user.user_name }}{% else %}Stranger{% endif %}!</h1>
         <h2>这里是工作计划完成情况统计信息页面</h2>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        {{ wtf.form_field(form.plan_client_contact) }}
+        {{ wtf.form_field(form.plan_capital_increment) }}
+        {{ wtf.form_field(form.plan_volume) }}
+        {{ wtf.form_field(form.plan_other_info) }}
+    </div>
+    <div class="col-md-4">
+        {{ wtf.form_field(form.complete_client_contact) }}
+        {{ wtf.form_field(form.complete_capital_increment) }}
+        {{ wtf.form_field(form.complete_volume) }}
+        {{ wtf.form_field(form.complete_other_info) }}
+    </div>
+    <div class="col-md-4">
+        {{ wtf.form_field(form.submit) }}
+    </div>
 </div>
 {% endblock %}

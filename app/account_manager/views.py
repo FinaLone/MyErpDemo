@@ -11,7 +11,7 @@ from flask import render_template, redirect, url_for, abort, flash, request, cur
 from flask_login import login_user, logout_user, login_required, current_user
 from . import account_manager as am
 from .. import db
-from .forms import ClientInfoForm, ClientSearchForm, QuestionForm, AnswerForm, WorkPlanForm, WorkComplete
+from .forms import ClientInfoForm, ClientSearchForm, QuestionForm, AnswerForm, WorkPlanForm, WorkCompleteForm
 from ..models import ClientInfo, Question, Answer, WorkPlan
 
 
@@ -21,6 +21,7 @@ def workplan():
     if form.validate_on_submit():
         my_amid = current_user.id
         newworkplan = WorkPlan(
+            flag = 0,
             am_id = my_amid,
             todaydate = datetime.now().date(),
             tommorrowdate = datetime.now().date() + timedelta(days=1),
@@ -36,9 +37,37 @@ def workplan():
     return render_template('account_manager/workplan.html', form=form)
 
 
-@am.route('/wpcomplete')
+@am.route('/wpcomplete', methods=["GET", "POST"])
 def wpcomplete():
-    return render_template('account_manager/wpcomplete.html')
+    my_amid = current_user.id
+    todaydate = datetime.now().date()
+    yesterdayplan = WorkPlan.query.filter(db.and_(WorkPlan.am_id==my_amid,
+                                                  WorkPlan.tommorrowdate==todaydate,
+                                                  WorkPlan.flag==0)).first()
+    form = WorkCompleteForm()
+    form.plan_client_contact.data = yesterdayplan.client_contact
+    form.plan_capital_increment.data = yesterdayplan.capital_increment
+    form.plan_volume.data = yesterdayplan.volume
+    form.plan_other_info.data = yesterdayplan.other_info
+
+    if form.validate_on_submit():
+        print "Iamin"
+        complete_workplan = WorkPlan(
+            flag = 1,
+            am_id = my_amid,
+            todaydate = datetime.now().date(),
+            tommorrowdate = datetime.now().date() + timedelta(days=1),
+            client_contact = form.complete_client_contact.data,
+            capital_increment = form.complete_capital_increment.data,
+            volume = form.complete_volume.data,
+            other_info = form.complete_other_info.data
+        )
+        db.session.add(complete_workplan)
+        db.session.commit()
+        flash('工作计划完成情况已录入！')
+        return redirect(url_for('account_manager.wpcomplete'))
+    return render_template('account_manager/wpcomplete.html', form=form)
+
 
 
 @am.route('/costofsales')
