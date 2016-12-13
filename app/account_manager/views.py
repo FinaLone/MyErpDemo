@@ -44,6 +44,11 @@ def wpcomplete():
     yesterdayplan = WorkPlan.query.filter(db.and_(WorkPlan.am_id==my_amid,
                                                   WorkPlan.tommorrowdate==todaydate,
                                                   WorkPlan.flag==0)).first()
+
+    if yesterdayplan.todaydate==None:
+        flash("没有今天的工作计划！")
+        return redirect(url_for('account_manager.wpcomplete'))
+
     form = WorkCompleteForm()
     form.plan_client_contact.data = yesterdayplan.client_contact
     form.plan_capital_increment.data = yesterdayplan.capital_increment
@@ -61,7 +66,7 @@ def wpcomplete():
             capital_increment = form.complete_capital_increment.data,
             volume = form.complete_volume.data,
             other_info = form.complete_other_info.data
-        )
+        )       #这里有个问题，就是只考虑了添加的情况，没有修改的情况，这样在数据库中会出现重复
         db.session.add(complete_workplan)
         db.session.commit()
         flash('工作计划完成情况已录入！')

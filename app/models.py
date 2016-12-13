@@ -262,7 +262,7 @@ class WorkPlan(db.Model):
     other_info = db.Column(db.Text)
 
     def __repr__(self):
-        return '<WorkPlan id:%r--date:%r>' % (self.am_id, self.todaydate.strftime('%Y-%m-%d'))
+        return '<WorkPlan id:%r--flag:%r--date:%r>' % (self.am_id, self.flag, self.todaydate.strftime('%Y-%m-%d'))
     def yanzheng(self):
         #这里得有一个对同一个user对同一个日期只能存在一条记录的验证功能
         #还得有一个没有连续记录时候的补充功能
