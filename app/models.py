@@ -202,7 +202,7 @@ class ClientInfo(db.Model):
     phone_1 = db.Column(db.String)                                          #常用电话1
     phone_2 = db.Column(db.String)                                          #常用电话2
     phone_3 = db.Column(db.String)                                          #常用电话3
-    qq = db.Column(db.Integer)                                              #QQ
+    qq = db.Column(db.String)                                              #QQ
     weixin = db.Column(db.String)                                           #微信
     email = db.Column(db.String)                                            #email
     occupation = db.Column(db.String)                                       #职业
@@ -211,7 +211,7 @@ class ClientInfo(db.Model):
     hobby = db.Column(db.String)                                            #业余爱好
 
     def __repr__(self):
-        return '<ClientInfo: %r>' % self.name
+        return '<CInfo: %r : %r>' % (self.am_id, self.name)
 
     def to_json(self):
         return {

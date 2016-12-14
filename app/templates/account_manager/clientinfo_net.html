@@ -7,4 +7,14 @@
     <h1>Hello, {% if current_user.is_authenticated() %}{{ current_user.user_name }}{% else %}Stranger{% endif %}!</h1>
         <h2>客户关系查询页面，主要用于二次开发。</h2>
 </div>
+<div class="col-md-4">
+    <h3>我的客户</h3>
+    条件查询
+</div>
+<div class="col-md-4">
+    查询结果
+</div>
+<div class="col-md-4">
+    关联人员
+</div>
 {% endblock %}

@@ -94,11 +94,11 @@ def clientinfo_new():
             race = form.race.data,
             id_number = form.id_number.data,
             birthday = form.birthday.data,
-            account_number = form.account_number.data,
+            account_number = int(form.account_number.data),
             phone_1 = form.phone_1.data,
             phone_2 = form.phone_2.data,
             phone_3 = form.phone_3.data,
-            qq = int(form.qq.data),
+            qq = form.qq.data,
             weixin = form.weixin.data,
             email = form.email.data,
             occupation = form.occupation.data,
@@ -106,9 +106,11 @@ def clientinfo_new():
             home = form.home.data,
             hobby = form.hobby.data
         )
+        print current_user.name +" get "+ newclientinfo.name        #将来注释掉
         db.session.add(newclientinfo)
         db.session.commit()
         flash('客户信息添加成功！')
+
         return redirect(url_for('account_manager.clientinfo_new'))
     return render_template('account_manager/clientinfo_new.html', form=form)
 
