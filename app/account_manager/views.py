@@ -56,7 +56,6 @@ def wpcomplete():
     form.plan_other_info.data = yesterdayplan.other_info
 
     if form.validate_on_submit():
-        print "Iamin"
         complete_workplan = WorkPlan(
             flag = 1,
             am_id = my_amid,
@@ -71,13 +70,13 @@ def wpcomplete():
         db.session.commit()
         flash('工作计划完成情况已录入！')
         return redirect(url_for('account_manager.wpcomplete'))
-    return render_template('account_manager/wpcomplete.html', form=form)
+    return render_template('account_manager/travel_and_entertainment_expense.html', form=form)
 
 
 
 @am.route('/costofsales')
 def costofsales():
-    return render_template('account_manager/costofsales.html')
+    return render_template('account_manager/travel_and_entertainment_expense.html')
 
 
 @am.route('/clientinfo_new', methods=['GET', 'POST'])
@@ -145,7 +144,6 @@ def clientinfo_search_sql():
         return_data = return_data[:-1]
     return_data += ']}'
     return return_data
-    #return '1'
 
 
 @am.route('/clientinfo_net')

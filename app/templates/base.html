@@ -34,7 +34,6 @@
                         <ul class="dropdown-menu">
                             <li><a href="{{ url_for('account_manager.workplan') }}">工作计划录入</a></li>
                             <li><a href="{{ url_for('account_manager.wpcomplete') }}">完成情况录入</a></li>
-                            <li><a href="{{ url_for('account_manager.costofsales') }}">销售成本</a></li>
                         </ul>
                     </li>
                     <li class="dropdown">
@@ -50,6 +49,14 @@
                         <ul class="dropdown-menu">
                             <li><a href="{{ url_for('account_manager.qa_list') }}">问题浏览</a></li>
                             <li><a href="{{ url_for('account_manager.qa_new') }}">提出问题</a></li>
+                        </ul>
+                    </li>
+                    {% endif %}
+                    {% if current_user.role.name=="FM" %}
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">销售成本<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ url_for('financial_manager.travel_and_entertainment_expense') }}">差旅公关费用</a></li>
                         </ul>
                     </li>
                     {% endif %}

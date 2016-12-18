@@ -16,6 +16,8 @@ from datetime import datetime
 class Permission:
     WORKPLAN = 0x01
     CLIENTINFO = 0x02
+    #Travel and entertainment expense
+    T_E_EXPENSE = 0x10
 
     ACCOUNTMANAGER = 0x0F
     ADMINISTER = 0x80
@@ -31,12 +33,15 @@ class Role(db.Model):
 
     users = db.relationship('User', backref='role', lazy='dynamic')
 
+
     @staticmethod
+    #insert_droles函数在添加新的职务时需要在shell里面执行一次
     def insert_roles():
         roles = {
             'SuperAdmin': (0xff, False),
             'AM':(Permission.WORKPLAN |
-                  Permission.CLIENTINFO, False)
+                  Permission.CLIENTINFO, False),
+            'FM':(Permission.T_E_EXPENSE, False)
         }
         for r in roles:
             role = Role.query.filter_by(name=r).first()
@@ -52,7 +57,7 @@ class Role(db.Model):
 
 
 #   用户表TUserInfo
-class User(UserMixin, db.Model):
+class User(UserMixin, db.Model):#用shell插入新用户的时候，一定要注意不要忽略confirmed一项
     __tablename__ = 'TUserInfo'
     id = db.Column(db.Integer, primary_key=True)                    #用户编号,最好是自动生成，不能修改
                                                                     #如果有冻结账户的需要，另设flag位

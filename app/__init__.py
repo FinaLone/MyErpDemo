@@ -41,5 +41,8 @@ def create_app(config_name):
     from .account_manager import account_manager as am_blueprint
     app.register_blueprint(am_blueprint, url_prefix='/am')
 
+    from .financial_manager import financial_manager as fm_blueprint
+    app.register_blueprint(fm_blueprint, url_prefix='/fm')
+
     return app
 
