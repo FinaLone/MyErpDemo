@@ -70,13 +70,13 @@ def wpcomplete():
         db.session.commit()
         flash('工作计划完成情况已录入！')
         return redirect(url_for('account_manager.wpcomplete'))
-    return render_template('account_manager/travel_and_entertainment_expense.html', form=form)
+    return render_template('account_manager/wpcomplete.html', form=form)
 
 
 
 @am.route('/costofsales')
 def costofsales():
-    return render_template('account_manager/travel_and_entertainment_expense.html')
+    return render_template('account_manager/wpcomplete.html')
 
 
 @am.route('/clientinfo_new', methods=['GET', 'POST'])
