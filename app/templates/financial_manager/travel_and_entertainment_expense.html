@@ -14,6 +14,11 @@
         {{ wtf.form_errors(form, hiddens="only") }}
         <div class="col-md-4">
             {{ wtf.form_field(form.am_id) }}
+            {{ wtf.form_field(form.invoice_date) }}
+            {{ wtf.form_field(form.invoice_amount) }}
+            {{ wtf.form_field(form.refund_amount) }}
+            {{ wtf.form_field(form.info) }}
+            {{ wtf.form_field(form.submit) }}
         </div>
         <div class="col-md-8">
 
@@ -21,4 +26,11 @@
 
     </form>
 </div>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script type="text/javascript">
+        $('#invoice_date').attr('type', 'date')
+    </script>
 {% endblock %}

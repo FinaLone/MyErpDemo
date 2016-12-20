@@ -75,6 +75,8 @@ class User(UserMixin, db.Model):#用shell插入新用户的时候，一定要注
     answer = db.relationship('Answer', backref='author', lazy='dynamic')
     clients = db.relationship('ClientInfo', backref='am', lazy='dynamic')
     workplan = db.relationship('WorkPlan', backref='am', lazy='dynamic')
+    teexpenxe_fm = db.relationship('TEExpense', primaryjoin='User.id==TEExpense.fm_id', backref='fm', lazy='dynamic')
+    teexpenxe_am = db.relationship('TEExpense', primaryjoin='User.id==TEExpense.am_id', backref='am', lazy='dynamic')
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
@@ -276,3 +278,17 @@ class WorkPlan(db.Model):
         self.todaydate=jintian
         self.tommorrowdate=mingtian
         #函数用于修改时间，实用后删除
+
+class TEExpense(db.Model):
+    __tablename__ = 'teexpense'
+    id = db.Column(db.Integer, primary_key=True, index=True)
+    fm_id = db.Column(db.Integer, db.ForeignKey('TUserInfo.id'))
+    am_id = db.Column(db.Integer, db.ForeignKey('TUserInfo.id'))
+    invoice_date = db.Column(db.DATE)                   #开票日期
+    todaydate = db.Column(db.DATE)                      #报销日期
+    invoice_amount = db.Column(db.Integer)              #发票金额
+    refund_amount = db.Column(db.Integer)               #报销金额
+    info = db.Column(db.Text)                           #备注
+
+    def __reper__(self):
+        return 'fm: %r -- am: %r' % (self.fm_id, self.am_id)

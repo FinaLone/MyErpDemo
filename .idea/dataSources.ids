@@ -43,6 +43,7 @@
       <column name="permissions" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
       <primary-key columns="id),unique (name"/>
       <exported-key name="#FAKE_TUserInfo_1" table="TUserInfo" schema="" catalog="" columns="role_id"/>
+      <exported-key name="#FAKE_TUserInfo_1" table="TUserInfo" schema="" catalog="" columns="role_id"/>
       <index name="ix_TRoleInfo_default" unique="true" columns="default"/>
     </table>
     <table name="TUserInfo" schema="" catalog="" type="TABLE">
@@ -62,6 +63,12 @@
       <exported-key name="#FAKE_TClientInfo_1" table="TClientInfo" schema="" catalog="" columns="am_id"/>
       <exported-key name="#FAKE_answers_2" table="answers" schema="" catalog="" columns="author_id"/>
       <exported-key name="#FAKE_questions_1" table="questions" schema="" catalog="" columns="author_id"/>
+      <exported-key name="#FAKE_workplan_1" table="workplan" schema="" catalog="" columns="am_id"/>
+      <exported-key name="#FAKE_TClientInfo_1" table="TClientInfo" schema="" catalog="" columns="am_id"/>
+      <exported-key name="#FAKE_answers_2" table="answers" schema="" catalog="" columns="author_id"/>
+      <exported-key name="#FAKE_questions_1" table="questions" schema="" catalog="" columns="author_id"/>
+      <exported-key name="#FAKE_teexpense_1" table="teexpense" schema="" catalog="" columns="fm_id"/>
+      <exported-key name="#FAKE_teexpense_2" table="teexpense" schema="" catalog="" columns="am_id"/>
       <exported-key name="#FAKE_workplan_1" table="workplan" schema="" catalog="" columns="am_id"/>
       <index name="ix_TUserInfo_email" unique="true" columns="email"/>
       <index name="ix_TUserInfo_user_name" unique="true" columns="user_name"/>
@@ -91,7 +98,22 @@
       <primary-key columns="id),foreign key(author_id"/>
       <foreign-key name="#FAKE_questions_1" columns="author_id" ref-table="TUserInfo" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
       <exported-key name="#FAKE_answers_1" table="answers" schema="" catalog="" columns="question_id"/>
+      <exported-key name="#FAKE_answers_1" table="answers" schema="" catalog="" columns="question_id"/>
       <index name="ix_questions_timestamp" unique="true" columns="timestamp"/>
+    </table>
+    <table name="teexpense" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <column name="fm_id" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <column name="am_id" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <column name="invoice_date" sqlType="DATE" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="todaydate" sqlType="DATE" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="invoice_amount" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <column name="refund_amount" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <column name="info" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <primary-key columns="id),foreign key(am_id"/>
+      <foreign-key name="#FAKE_teexpense_1" columns="fm_id" ref-table="TUserInfo" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_teexpense_2" columns="am_id" ref-table="TUserInfo" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <index name="ix_teexpense_id" unique="true" columns="id"/>
     </table>
     <table name="workplan" schema="" catalog="" type="TABLE">
       <column name="id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
