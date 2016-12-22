@@ -22,6 +22,7 @@ class ClientInfoForm(Form):
     id_number = StringField('身份证号', default='')
     birthday = DateField('生日', format='%Y-%m-%d', validators=[Optional()])
     account_number = StringField('交易账号', default='1233211234567', validators=[Regexp('^[0-9][0-9]*$', 0, '用户账户只能是数字')])
+        #account_number根据具体字符长度来验证
     phone_1 = StringField('常用电话1')
     phone_2 = StringField('常用电话2')
     phone_3 = StringField('常用电话3')

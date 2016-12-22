@@ -5,7 +5,7 @@ reload(sys)
 sys.setdefaultencoding('utf8')
 
 from flask.ext.wtf import Form
-from wtforms import StringField, IntegerField, SubmitField, DateField, SelectField, TextAreaField
+from wtforms import StringField, IntegerField, SubmitField, DateField, SelectField, TextAreaField, validators
 from wtforms.validators import Required, Length, Email, Regexp, NumberRange, Optional
 from .. import db
 from ..models import User, Role
@@ -14,8 +14,8 @@ from datetime import datetime
 class TEExpenseForm(Form):
     am_id = SelectField('员工姓名', coerce=int)
     invoice_date = DateField('开票日期')
-    invoice_amount = IntegerField('发票金额', default=0)
-    refund_amount = IntegerField('报销金额', default=0)
+    invoice_amount = IntegerField('发票金额', validators=[validators.NumberRange(min=0, max=1000000)], default=0)
+    refund_amount = IntegerField('报销金额', validators=[validators.NumberRange(min=0, max=1000000)], default=0)
     info = TextAreaField('备注', default='请在这里输入一些文字描述信息...')
     submit = SubmitField('保存')
 
