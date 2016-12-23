@@ -25,12 +25,76 @@
             {{ wtf.form_field(form.complete_other_info) }}
         </div>
         <div class="col-md-4">
-            {{ wtf.form_field(form.submit) }}
-            <p>
+            <!--<p>
                 这里需要计算完成度
                 如果有排名的话更好
-            </p>
+            </p>!-->
+            <div class="easy-pie-chart percentage" id="client_contact_pie" data-percent="0" data-scale-color="#ffb400" data-color="#D15B47">
+                <span class="percent" id="client_contact_percent"></span>%
+            </div>
+             <div class="easy-pie-chart percentage" id="capital_increment_pie" data-percent="0" data-scale-color="#ffb400" data-color="#D15B47">
+                <span class="percent" id="capital_increment_percent"></span>%
+            </div>
+             <div class="easy-pie-chart percentage" id="volume_pie" data-percent="0" data-scale-color="#ffb400" data-color="#D15B47">
+                <span class="percent" id="volume_percent"></span>%
+            </div>
+             <div class="easy-pie-chart percentage" id="other_info_pie" data-percent="0" data-scale-color="#ffb400" data-color="#D15B47">
+                <span class="percent" id="other_info_percent"></span>%
+            </div>
+            {{ wtf.form_field(form.submit) }}
+            <p>
         </div>
     </form>
 </div>
+{% endblock %}
+{% block scripts %}
+    {{ super() }}
+    <script type="text/javascript">
+        $('#complete_client_contact').attr('oninput', 'oninput1()');
+        $('#complete_capital_increment').attr('oninput', 'oninput2()');
+        $('#complete_volume').attr('oninput', 'oninput3()');
+        $('#complete_other_info').attr('oninput', 'oninput4()');
+        function oninput1(){//联系客户更新
+            var plannum = $('#plan_client_contact').val();
+            var completenum = $('#complete_client_contact').val();
+            var rst = (completenum*100/plannum).toFixed(2);
+            $('#client_contact_percent').html(rst);
+            $('#client_contact_pie').data('easyPieChart').update(rst);
+        }
+        function oninput2(){//新增资金更新
+            var plannum = $('#plan_capital_increment').val();
+            var completenum = $('#complete_capital_increment').val();
+            var rst = (completenum*100/plannum).toFixed(2);
+            $('#capital_increment_percent').html(rst);
+            $('#capital_increment_pie').data('easyPieChart').update(rst);
+        }
+        function oninput3(){//成交量更新
+            var plannum = $('#plan_volume').val();
+            var completenum = $('#complete_volume').val();
+            var rst = (completenum*100/plannum).toFixed(2);
+            $('#volume_percent').html(rst);
+            $('#volume_pie').data('easyPieChart').update(rst);
+        }
+        function oninput4(){//其他更新
+            var plannum = $('#plan_other_info').val();
+            var completenum = $('#complete_other_info').val();
+            var rst = (completenum*100/plannum).toFixed(2);
+            $('#other_info_percent').html(rst);
+            $('#other_info_pie').data('easyPieChart').update(rst);
+        }
+        var oldie = /msie\s*(8|7|6)/.test(navigator.userAgent.toLowerCase());
+
+        $('.percentage').each(function(){
+			$(this).easyPieChart({
+				barColor: $(this).data('color'),
+				trackColor: '#EEEEEE',
+				scaleColor: false,
+				lineCap: 'butt',
+				lineWidth: 8,
+				animate: oldie ? false : 1000,
+				size:70
+			}).css('color', $(this).data('color'));
+		});
+
+    </script>
 {% endblock %}
