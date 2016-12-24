@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component name="dataSourceStorage">
   <data-source name="Sqlite (Xerial) - data-dev.sqlite" uuid="0162bbd8-cc05-401f-af62-1f9982d24ae8">
-    <database-info product="SQLite" version="3.8.11" jdbc-version="2.1" driver-name="SQLiteJDBC" driver-version="native"/>
+    <database-info product="SQLite" version="3.8.9" jdbc-version="2.1" driver-name="SQLiteJDBC" driver-version="native"/>
     <case-sensitivity plain-identifiers="mixed" quoted-identifiers="mixed"/>
     <schema name="" catalog=""/>
     <table name="TClientInfo" schema="" catalog="" type="TABLE">
@@ -43,7 +43,6 @@
       <column name="permissions" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
       <primary-key columns="id),unique (name"/>
       <exported-key name="#FAKE_TUserInfo_1" table="TUserInfo" schema="" catalog="" columns="role_id"/>
-      <exported-key name="#FAKE_TUserInfo_1" table="TUserInfo" schema="" catalog="" columns="role_id"/>
       <index name="ix_TRoleInfo_default" unique="true" columns="default"/>
     </table>
     <table name="TUserInfo" schema="" catalog="" type="TABLE">
@@ -60,10 +59,6 @@
       <column name="about_me" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
       <primary-key columns="id),foreign key(role_id"/>
       <foreign-key name="#FAKE_TUserInfo_1" columns="role_id" ref-table="TRoleInfo" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
-      <exported-key name="#FAKE_TClientInfo_1" table="TClientInfo" schema="" catalog="" columns="am_id"/>
-      <exported-key name="#FAKE_answers_2" table="answers" schema="" catalog="" columns="author_id"/>
-      <exported-key name="#FAKE_questions_1" table="questions" schema="" catalog="" columns="author_id"/>
-      <exported-key name="#FAKE_workplan_1" table="workplan" schema="" catalog="" columns="am_id"/>
       <exported-key name="#FAKE_TClientInfo_1" table="TClientInfo" schema="" catalog="" columns="am_id"/>
       <exported-key name="#FAKE_answers_2" table="answers" schema="" catalog="" columns="author_id"/>
       <exported-key name="#FAKE_questions_1" table="questions" schema="" catalog="" columns="author_id"/>
@@ -97,7 +92,6 @@
       <column name="author_id" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
       <primary-key columns="id),foreign key(author_id"/>
       <foreign-key name="#FAKE_questions_1" columns="author_id" ref-table="TUserInfo" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
-      <exported-key name="#FAKE_answers_1" table="answers" schema="" catalog="" columns="question_id"/>
       <exported-key name="#FAKE_answers_1" table="answers" schema="" catalog="" columns="question_id"/>
       <index name="ix_questions_timestamp" unique="true" columns="timestamp"/>
     </table>

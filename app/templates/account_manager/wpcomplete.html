@@ -38,9 +38,9 @@
              <div class="easy-pie-chart percentage" id="volume_pie" data-percent="0" data-scale-color="#ffb400" data-color="#D15B47">
                 <span class="percent" id="volume_percent"></span>%
             </div>
-             <div class="easy-pie-chart percentage" id="other_info_pie" data-percent="0" data-scale-color="#ffb400" data-color="#D15B47">
+{#             <div class="easy-pie-chart percentage" id="other_info_pie" data-percent="0" data-scale-color="#ffb400" data-color="#D15B47">
                 <span class="percent" id="other_info_percent"></span>%
-            </div>
+            </div>#}
             {{ wtf.form_field(form.submit) }}
             <p>
         </div>
@@ -53,7 +53,7 @@
         $('#complete_client_contact').attr('oninput', 'oninput1()');
         $('#complete_capital_increment').attr('oninput', 'oninput2()');
         $('#complete_volume').attr('oninput', 'oninput3()');
-        $('#complete_other_info').attr('oninput', 'oninput4()');
+        {#$('#complete_other_info').attr('oninput', 'oninput4()');#}
         function oninput1(){//联系客户更新
             var plannum = $('#plan_client_contact').val();
             var completenum = $('#complete_client_contact').val();
@@ -75,13 +75,13 @@
             $('#volume_percent').html(rst);
             $('#volume_pie').data('easyPieChart').update(rst);
         }
-        function oninput4(){//其他更新
+{#        function oninput4(){//其他更新
             var plannum = $('#plan_other_info').val();
             var completenum = $('#complete_other_info').val();
             var rst = (completenum*100/plannum).toFixed(2);
             $('#other_info_percent').html(rst);
             $('#other_info_pie').data('easyPieChart').update(rst);
-        }
+        }#}
         var oldie = /msie\s*(8|7|6)/.test(navigator.userAgent.toLowerCase());
 
         $('.percentage').each(function(){
