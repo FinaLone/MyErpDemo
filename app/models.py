@@ -20,6 +20,7 @@ class Permission:
     T_E_EXPENSE = 0x10
 
     ACCOUNTMANAGER = 0x0F
+    FINANCIALMANAGER = 0x10
     ADMINISTER = 0x80
 
 
@@ -39,9 +40,8 @@ class Role(db.Model):
     def insert_roles():
         roles = {
             'SuperAdmin': (0xff, False),
-            'AM':(Permission.WORKPLAN |
-                  Permission.CLIENTINFO, False),
-            'FM':(Permission.T_E_EXPENSE, False)
+            'AM':(Permission.ACCOUNTMANAGER, False),
+            'FM':(Permission.FINANCIALMANAGER, False)
         }
         for r in roles:
             role = Role.query.filter_by(name=r).first()
@@ -159,6 +159,9 @@ class User(UserMixin, db.Model):#用shell插入新用户的时候，一定要注
 
     def is_accountmanager(self):
         return self.can(Permission.ACCOUNTMANAGER)
+
+    def is_financialmanager(self):
+        return self.can(Permission.FINANCIALMANAGER)
 
     def ping(self):
         self.last_seen = datetime.now()

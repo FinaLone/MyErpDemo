@@ -35,15 +35,15 @@ def edit_profile():
         current_user.location = form.location.data
         current_user.about_me = form.about_me.data
         db.session.add(current_user)
-
-        filename = form.avatar.data.filename
-        #filetype = os.path.splitext(filename)[1]
-        filetype = filename.rsplit('.', 1)[1]
-        if filetype == 'jpg':
-            app = current_app._get_current_object()
-            form.avatar.data.save(os.path.join(app.config['AVATAR_FOLDER'], current_user.user_name + '.' + filetype))
-        else:
-            flash('文件格式不对，请使用.jpg文件！')
+        if form.avatar.data.filename:
+            filename = form.avatar.data.filename
+            #filetype = os.path.splitext(filename)[1]
+            filetype = filename.rsplit('.', 1)[1]
+            if filetype == 'jpg':
+                app = current_app._get_current_object()
+                form.avatar.data.save(os.path.join(app.config['AVATAR_FOLDER'], current_user.user_name + '.' + filetype))
+            else:
+                flash('文件格式不对，请使用.jpg文件！')
 
         flash('Your profile has been updated.')
         return redirect(url_for('.user', username=current_user.user_name))

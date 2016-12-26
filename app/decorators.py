@@ -25,4 +25,7 @@ def admin_required(f):
     return permission_required(Permission.ADMINISTER)(f)
 
 def am_required(f):
-    return permission_required(Permission.ACCOUNTMANAGER)
+    return permission_required(Permission.ACCOUNTMANAGER)(f)
+
+def fm_required(f):
+    return permission_required(Permission.FINANCIALMANAGER)(f)

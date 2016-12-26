@@ -13,9 +13,11 @@ from . import account_manager as am
 from .. import db
 from .forms import ClientInfoForm, ClientSearchForm, QuestionForm, AnswerForm, WorkPlanForm, WorkCompleteForm
 from ..models import ClientInfo, Question, Answer, WorkPlan
+from ..decorators import am_required
 
 
 @am.route('/workplan', methods=["GET", "POST"])
+@am_required
 def workplan():
     form = WorkPlanForm()
     if form.validate_on_submit():
@@ -38,6 +40,7 @@ def workplan():
 
 
 @am.route('/wpcomplete', methods=["GET", "POST"])
+@am_required
 def wpcomplete():
     my_amid = current_user.id
     todaydate = datetime.now().date()
@@ -80,6 +83,7 @@ def costofsales():
 
 
 @am.route('/clientinfo_new', methods=['GET', 'POST'])
+@am_required
 def clientinfo_new():
     form = ClientInfoForm()
     if form.validate_on_submit():
@@ -115,11 +119,13 @@ def clientinfo_new():
 
 
 @am.route('/clientinfo_search', methods=['GET', 'POST'])
+@am_required
 def clientinfo_search():
     form = ClientSearchForm()
     return render_template('account_manager/clientinfo_search.html',form=form)
 
 @am.route('/clientinfo_search_sql', methods=['GET', 'POST'])
+@am_required
 def clientinfo_search_sql():
     data = request.get_data()
     #flash('1'+data)
@@ -147,11 +153,13 @@ def clientinfo_search_sql():
 
 
 @am.route('/clientinfo_net')
+@am_required
 def clientinfo_net():
     return render_template('account_manager/clientinfo_net.html')
 
 
 @am.route('/qa_list', methods=["GET", "POST"])
+@am_required
 def qa_list():
     form = QuestionForm()
     if form.validate_on_submit():
@@ -170,6 +178,7 @@ def qa_list():
 
 
 @am.route('/qa_new', methods=["GET", "POST"])
+@am_required
 def qa_new():
     form = QuestionForm()
     if form.validate_on_submit():
@@ -181,6 +190,7 @@ def qa_new():
     return render_template('account_manager/qa_new.html', form=form)
 
 @am.route('/qa/<qno>', methods=["GET", "POST"])
+@am_required
 def qa_detail(qno):
     question = Question.query.filter_by(id=qno).first()
     if question is None:
