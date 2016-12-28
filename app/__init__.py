@@ -44,5 +44,8 @@ def create_app(config_name):
     from .financial_manager import financial_manager as fm_blueprint
     app.register_blueprint(fm_blueprint, url_prefix='/fm')
 
+    from .boss import boss as boss_blueprint
+    app.register_blueprint(boss_blueprint, url_prefix='/boss')
+
     return app
 

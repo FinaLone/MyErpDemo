@@ -50,6 +50,11 @@ def wpcomplete():
 
     if yesterdayplan.todaydate==None:
         flash("没有今天的工作计划！")
+        # form.plan_client_contact.data = todaydate - timedelta(days=1)
+        # form.plan_capital_increment.data = 0
+        # form.plan_volume.data = 0
+        # form.plan_other_info.data = ""
+        # return render_template('account_manager/wpcomplete.html', form=form)      #修改这里
         return redirect(url_for('account_manager.wpcomplete'))
 
     form = WorkCompleteForm()

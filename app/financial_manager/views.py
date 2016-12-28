@@ -33,3 +33,5 @@ def travel_and_entertainment_expense():
         flash('报销内容录入成功！')
         return redirect(url_for('financial_manager.travel_and_entertainment_expense'))
     return render_template('financial_manager/travel_and_entertainment_expense.html', form=form)
+
+

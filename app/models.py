@@ -22,6 +22,7 @@ class Permission:
     ACCOUNTMANAGER = 0x0F
     FINANCIALMANAGER = 0x10
     ADMINISTER = 0x80
+    BOSS = 0x70
 
 
 #   用户角色表roles
@@ -41,7 +42,8 @@ class Role(db.Model):
         roles = {
             'SuperAdmin': (0xff, False),
             'AM':(Permission.ACCOUNTMANAGER, False),
-            'FM':(Permission.FINANCIALMANAGER, False)
+            'FM':(Permission.FINANCIALMANAGER, False),
+            'BOSS':(Permission.BOSS, False)
         }
         for r in roles:
             role = Role.query.filter_by(name=r).first()
