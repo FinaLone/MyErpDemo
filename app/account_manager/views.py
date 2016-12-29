@@ -133,7 +133,6 @@ def clientinfo_search():
 @am_required
 def clientinfo_search_sql():
     data = request.get_data()
-    #flash('1'+data)
     data = json.loads(data)
     am_id = current_user.id
     findlist = ClientInfo.query.filter(db.and_(ClientInfo.am_id == am_id,
