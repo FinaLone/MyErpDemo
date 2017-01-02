@@ -18,7 +18,10 @@
 <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
 <script src="http://www.bootcss.com/p/chart.js/docs/prettify.js"></script>
 <script src="http://www.bootcss.com/p/chart.js/docs/Chart.js"></script>
-<script>
+<script type="text/javascript">
+  var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+</script>
+<script type="text/javascript">
     var lineChartData = {
         labels : ["January","February","March","April","May","June","July"],
         datasets : [
@@ -38,7 +41,20 @@
             }
         ]
     }
-    var myLine = new Chart(document.getElementById("myChart").getContext("2d")).Line(lineChartData);
+    $(function(){
+        $.getJSON($SCRIPT_ROOT + '/boss/_statistics_allam_workplan_sum',
+                {},
+                function(data) {
+                    lineChartData.labels = data.labels;
+                    lineChartData.datasets = data.datasets;
+                    var myLine = new Chart(document.getElementById("myChart").getContext("2d")).Line(lineChartData);
+
+      });
+      return false;
+    })
+
+{#    var myLine = new Chart(document.getElementById("myChart").getContext("2d")).Line(lineChartData);#}
+
 </script>
 
 {% endblock %}

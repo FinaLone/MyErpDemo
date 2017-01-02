@@ -4,7 +4,7 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
 
-from flask import render_template, redirect, url_for, abort, flash, request, current_app
+from flask import render_template, redirect, url_for, jsonify, flash, request, current_app
 from datetime import datetime, timedelta
 from . import boss
 from .. import db
@@ -32,17 +32,21 @@ def statistics_workplan():
 
 #全体，一段时间，三项数值和
 @boss.route('/_statistics_allam_workplan_sum')
-def statistics_allam_workplan_sum(self, startdate=datetime.now().date-timedelta(days=365), enddate=datetime.now().date()):
+def statistics_allam_workplan_sum():
+    startdate=datetime.now().date()-timedelta(days=365)
+    enddate=datetime.now().date()
     searchdata=db.session.query(WorkPlan.am_id,
                      db.func.sum(WorkPlan.client_contact),
                      db.func.sum(WorkPlan.capital_increment),
                      db.func.sum(WorkPlan.volume)
                      ).filter(db.and_(WorkPlan.tommorrowdate.between(startdate,enddate),
                                    WorkPlan.flag==0)).group_by(WorkPlan.am_id).all()
-    am_id_name=db.session.query(User.id,User.name).filter(User.role_id==1).all()
-    lables = []
+    am_id_name=db.session.query(User.name).filter(User.role_id==1).all()
+
+    labels = []
     for am_name in am_id_name:
-        lables.append(am_name)
+        labels.append(am_name[0])
+
     client_contact = []
     capital_increment = []
     volume =[]
@@ -51,25 +55,24 @@ def statistics_allam_workplan_sum(self, startdate=datetime.now().date-timedelta(
         capital_increment.append(data[2])
         volume.append(data[3])
 
-    dict_client_contact='{fillColor : "rgba(220,220,220,0.5)",'\
-                        +'strokeColor : "rgba(220,220,220,1)",'\
-                        +'pointColor : "rgba(220,220,220,1)",'\
-                        +'pointStrokeColor : "#fff",'\
-                        +'data : '+client_contact+'}'
-    dict_capital_increment='fillColor : "rgba(151,187,205,0.5)",'\
-			+'strokeColor : "rgba(151,187,205,1)",'\
-			+'pointColor : "rgba(151,187,205,1)",'\
-			+'pointStrokeColor : "#fff",'\
-			+'data : '+capital_increment+'}'
-    dict_volume='fillColor : "rgba(101,117,205,0.5)",'\
-			+'strokeColor : "rgba(101,117,205,1)",'\
-			+'pointColor : "rgba(101,117,205,1)",'\
-			+'pointStrokeColor : "#fff",'\
-			+'data : '+volume+'}'
+    dict_client_contact={'fillColor' : "rgba(220,220,220,0.5)",
+                        'strokeColor' : "rgba(220,220,220,0.5)",
+                        'pointColor' : "rgba(220,220,220,0.5)",
+                        'pointStrokeColor' : "#fff",
+                        'data' : client_contact}
+    dict_capital_increment={'fillColor' : "rgba(151,187,205,0.5)",
+			'strokeColor' : "rgba(151,187,205,0.5)",
+			'pointColor' : "rgba(151,187,205,0.5)",
+			'pointStrokeColor' : "#fff",
+			'data' : capital_increment}
+    dict_volume={'fillColor' : "rgba(101,117,205,0.5)",
+			'strokeColor' : "rgba(101,117,205,0.5)",
+			'pointColor' : "rgba(101,117,205,0.5)",
+			'pointStrokeColor' : "#fff",
+			'data' : volume}
     datasets = [dict_client_contact,dict_capital_increment,dict_volume]
-    data={'lables':lables,
-          'datasets':datasets}
-    return data
+
+    return jsonify(labels=labels, datasets=datasets)
 
 #单人，指定日期，三项数值
 def statistics_singleam_workplan(self, amid, thatday):
