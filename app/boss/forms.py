@@ -20,3 +20,4 @@ class Statisticsamwp(Form):
         self.am_id.choices=[(am.id, am.name) for am in User.query.filter_by(role_id=roleamid).all()]
         self.start_date.data=datetime.now().date()
         self.end_date.data=datetime.now().date()
+    #添加验证函数，结束日期不能早于开始日期
