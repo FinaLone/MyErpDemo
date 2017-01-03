@@ -8,6 +8,7 @@ from flask import render_template, redirect, url_for, jsonify, flash, request, c
 from datetime import datetime, timedelta
 from . import boss
 from .. import db
+from .forms import Statisticsamwp
 from ..models import WorkPlan, User
 
 '''
@@ -27,8 +28,8 @@ return-->[(datetime.date(2016, 12, 13),), (datetime.date(2016, 12, 24),), (datet
 
 @boss.route('/statistics_workplan', methods=["GET", "POST"])
 def statistics_workplan():
-
-    return render_template('boss/statistics_workplan.html')
+    form = Statisticsamwp()
+    return render_template('boss/statistics_workplan.html', form=form)
 
 #全体，一段时间，三项数值和
 @boss.route('/_statistics_allam_workplan_sum')
