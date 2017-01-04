@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 
-{% block title %}工作计划统计{% endblock %}
+{% block title %}客户经理工作计划{% endblock %}
 
 {% block page_content %}
 <div class="page-header">
@@ -12,6 +12,7 @@
         {{ form.hidden_tag() }}
         {{ wtf.form_errors(form, hiddens="only") }}
         <div class="col-md-2">
+            {{ wtf.form_field(form.am_id) }}
             {{ wtf.form_field(form.start_date) }}
             {{ wtf.form_field(form.end_date) }}
         </div>
@@ -48,7 +49,7 @@
     var capital_increment = {}
     var volume = {}
     function showChart(){
-        $.getJSON($SCRIPT_ROOT + '/boss/_statistics_allam_workplan_sum',
+        $.getJSON($SCRIPT_ROOT + '/boss/_review_single_am_workplan',
                 {
                     am_id: $('#am_id').val(),
                     start_date: $('#start_date').val(),
@@ -87,6 +88,7 @@
             {
                 alert("开始时间不能晚于结束时间");
             }
+
         });
     });
 </script>

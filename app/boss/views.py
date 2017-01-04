@@ -8,8 +8,10 @@ from flask import render_template, redirect, url_for, jsonify, flash, request, c
 from datetime import datetime, timedelta
 from . import boss
 from .. import db
-from .forms import Statisticsamwp
+from .forms import StatisticsWorkplanForm, ReviewAMWorkPlanForm
 from ..models import WorkPlan, User
+from ..decorators import CJsonEncoder
+import json
 
 '''
 db.session.query(ClientInfo.am_id,db.func.count()).filter(ClientInfo.flag==0).group_by(ClientInfo.am_id).all()
@@ -28,21 +30,16 @@ return-->[(datetime.date(2016, 12, 13),), (datetime.date(2016, 12, 24),), (datet
 
 @boss.route('/statistics_workplan', methods=["GET", "POST"])
 def statistics_workplan():
-    form = Statisticsamwp()
+    form = StatisticsWorkplanForm()
     return render_template('boss/statistics_workplan.html', form=form)
 
 #全体，一段时间，三项数值和
 @boss.route('/_statistics_allam_workplan_sum')
 def statistics_allam_workplan_sum():
-    am_id = request.args.get('am_id',0,type=int)
-    start_date = request.args.get('start_date')
-    end_date = request.args.get('end_date')
-    print am_id
-    print start_date
-    print end_date
+    # am_id = request.args.get('am_id',0,type=int)
+    startdate = request.args.get('start_date')
+    enddate = request.args.get('end_date')
 
-    startdate=datetime.now().date()-timedelta(days=365)
-    enddate=datetime.now().date()
     searchdata=db.session.query(WorkPlan.am_id,
                      db.func.sum(WorkPlan.client_contact),
                      db.func.sum(WorkPlan.capital_increment),
@@ -85,10 +82,54 @@ def statistics_allam_workplan_sum():
     return jsonify(labels=labels, client_contact=client_contact, capital_increment=capital_increment, volume=volume)
 
 #单人，指定日期，三项数值
-def statistics_singleam_workplan(self, amid, thatday):
-    data=db.session.query(WorkPlan.am_id,
-                          WorkPlan.client_contact,
-                          WorkPlan.capital_increment,
-                          WorkPlan.volume).filter(db.and_(WorkPlan.todaydate==thatday,
-                                                  WorkPlan.flag==0)).first()
-    return data
+@boss.route('/review_am_workplan', methods=["GET", "POST"])
+def review_am_workplan():
+    form = ReviewAMWorkPlanForm()
+    return render_template('boss/review_am_workplan.html', form=form)
+
+@boss.route('/_review_single_am_workplan')
+def review_single_am_workplan():
+    amid = request.args.get('am_id',0,type=int)
+    startdate = request.args.get('start_date')
+    enddate = request.args.get('end_date')
+    if startdate > enddate:
+        return jsonify()
+
+    searchdata=db.session.query(WorkPlan.client_contact,
+                                WorkPlan.capital_increment,
+                                WorkPlan.volume,
+                                WorkPlan.todaydate).filter(db.and_(WorkPlan.tommorrowdate.between(startdate,enddate),
+                                                                   WorkPlan.flag==0,
+                                                                   WorkPlan.am_id==amid)
+                                                           ).order_by(WorkPlan.todaydate).all()
+
+    labels = []
+    client_contact = []
+    capital_increment = []
+    volume =[]
+    for data in searchdata:
+        labels.append(json.dumps(data[3],cls=CJsonEncoder))
+        client_contact.append(data[0])
+        capital_increment.append(data[1])
+        volume.append(data[2])
+
+    dict_client_contact={'fillColor' : "rgba(220,220,220,0.5)",
+                        'strokeColor' : "rgba(220,220,220,0.5)",
+                        'pointColor' : "rgba(220,220,220,0.5)",
+                        'pointStrokeColor' : "#fff",
+                        'data' : client_contact}
+    dict_capital_increment={'fillColor' : "rgba(151,187,205,0.5)",
+			'strokeColor' : "rgba(151,187,205,0.5)",
+			'pointColor' : "rgba(151,187,205,0.5)",
+			'pointStrokeColor' : "#fff",
+			'data' : capital_increment}
+    dict_volume={'fillColor' : "rgba(101,117,205,0.5)",
+			'strokeColor' : "rgba(101,117,205,0.5)",
+			'pointColor' : "rgba(101,117,205,0.5)",
+			'pointStrokeColor' : "#fff",
+			'data' : volume}
+    client_contact = [dict_client_contact]
+    capital_increment = [dict_capital_increment]
+    volume = [dict_volume]
+
+    return jsonify(labels=labels, client_contact=client_contact, capital_increment=capital_increment, volume=volume)
