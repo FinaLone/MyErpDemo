@@ -140,7 +140,9 @@ def clientinfo_search_sql():
                                         ClientInfo.name.like("%"+data['name']+"%"),
                                         ClientInfo.sex==data['sex'],
                                         ClientInfo.preference.like("%"+data['preference']+"%"),
-                                        ClientInfo.race.like("%"+data['race']+"%")
+                                        ClientInfo.race.like("%"+data['race']+"%"),
+                                        ClientInfo.phone_1.like("%"+data['phone']+"%"),
+                                        ClientInfo.am_id==current_user.id
                                         )).all()        #电话先不考虑ClientInfo.phone.like("%"+phone+"%")
     return_data = ''
     return_data += '{len:'
@@ -155,6 +157,58 @@ def clientinfo_search_sql():
     return_data += ']}'
     return return_data
 
+@am.route('/clientinfo_change/<client_id>', methods=['GET', 'POST'])
+@am_required
+def clientinfo_change(client_id):
+    client_info = ClientInfo.query.filter_by(id=client_id).first()
+    if client_info is None:
+        abort(404)
+    form = ClientInfoForm()
+    if form.validate_on_submit():
+        client_info.flag = int(form.flag.data)
+        print(form.flag.data)
+        client_info.name = form.name.data
+        client_info.sex = int(form.sex.data)
+        client_info.preference = form.preference.data
+        client_info.race = form.race.data
+        client_info.id_number = form.id_number.data
+        #client_info.birthday = form.birthday.data
+        client_info.account_number = int(form.account_number.data)
+        client_info.phone_1 = form.phone_1.data
+        client_info.phone_2 = form.phone_2.data
+        client_info.phone_3 = form.phone_3.data
+        client_info.qq = form.qq.data
+        client_info.weixin = form.weixin.data
+        client_info.email = form.email.data
+        client_info.occupation = form.occupation.data
+        print(form.occupation.data)
+        client_info.workplace = form.workplace.data
+        client_info.home = form.home.data
+        client_info.hobby = form.hobby.data
+        db.session.commit()
+        flash('保存成功！')
+        #return redirect(url_for('.clientinfo_change', form=form, client_info=client_info))
+    return render_template('account_manager/clientinfo_change.html', form=form, client_info=client_info)
+
+@am.route('/clientinfo_change_sql', methods=['GET', 'POST'])
+@am_required
+def clientinfo_change_sql():
+    data = request.get_data()
+    data = json.loads(data)
+    am_id = current_user.id
+    findlist = ClientInfo.query.filter(ClientInfo.id == int(data['id'])).all()
+    return_data = ''
+    return_data += '{len:'
+    return_data += str(len(findlist))
+    return_data += ',data:['
+    if len(findlist) is not 0:
+        for item in findlist:
+            return_data += json.dumps(item.to_json())
+            return_data += ','
+
+        return_data = return_data[:-1]
+    return_data += ']}'
+    return return_data
 
 @am.route('/clientinfo_net')
 @am_required
