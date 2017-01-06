@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
 
 {% block title %}客户关系管理{% endblock %}
 
@@ -6,11 +7,29 @@
 <div class="page-header">
     <h1>Hello, {% if current_user.is_authenticated() %}{{ current_user.user_name }}{% else %}Stranger{% endif %}!</h1>
 </div>
-<div>
-    1234567
-    <canvas id="myChart" width="400" height="400"></canvas>
-    7654321
+<div class="row">
+    <form class="form" method="post" role="form">
+        {{ form.hidden_tag() }}
+        {{ wtf.form_errors(form, hiddens="only") }}
+        <div class="col-md-2">
+            {{ wtf.form_field(form.am_id) }}
+            {{ wtf.form_field(form.start_date) }}
+            {{ wtf.form_field(form.end_date) }}
+        </div>
+        <div class="col-md-10">
+            <div>
+                <canvas id="client_contact" width="800" height="150"></canvas>
+            </div>
+            <div>
+                <canvas id="capital_increment" width="800" height="150"></canvas>
+            </div>
+            <div>
+                <canvas id="volume" width="800" height="150"></canvas>
+            </div>
+        </div>
+    </form>
 </div>
+
 {% endblock %}
 
 {% block scripts %}
@@ -19,42 +38,49 @@
 <script src="http://www.bootcss.com/p/chart.js/docs/prettify.js"></script>
 <script src="http://www.bootcss.com/p/chart.js/docs/Chart.js"></script>
 <script type="text/javascript">
+    $('#start_date').attr('type', 'date')
+    $('#end_date').attr('type', 'date')
+</script>
+<script type="text/javascript">
   var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 </script>
 <script type="text/javascript">
-    var lineChartData = {
-        labels : ["January","February","March","April","May","June","July"],
-        datasets : [
-            {
-                fillColor : "rgba(220,220,220,0.5)",
-                strokeColor : "rgba(220,220,220,1)",
-                pointColor : "rgba(220,220,220,1)",
-                pointStrokeColor : "#fff",
-                data : [65,59,90,81,56,55,40]
-            },
-            {
-                fillColor : "rgba(151,187,205,0.5)",
-                strokeColor : "rgba(151,187,205,1)",
-                pointColor : "rgba(151,187,205,1)",
-                pointStrokeColor : "#fff",
-                data : [28,48,40,19,96,27,100]
-            }
-        ]
+    var client_contact = {}
+    var capital_increment = {}
+    var volume = {}
+    function showChart(){
+        $.getJSON($SCRIPT_ROOT + '/boss/_statistics_allam_workplan_sum',
+                {
+                    am_id: $('#am_id').val(),
+                    start_date: $('#start_date').val(),
+                    end_date: $('#end_date').val()
+                },
+                function(data) {
+                    client_contact.labels = data.labels;
+                    client_contact.datasets = data.client_contact;
+                    capital_increment.labels = data.labels;
+                    capital_increment.datasets = data.capital_increment;
+                    volume.labels = data.labels;
+                    volume.datasets = data.volume;
+                    document.getElementById("client_contact").width=800;
+                    document.getElementById("capital_increment").width=800;
+                    document.getElementById("volume").width=800;
+                    document.getElementById("client_contact").height=150;
+                    document.getElementById("capital_increment").height=150;
+                    document.getElementById("volume").height=150;
+
+                    var client_contact_Line = new Chart(document.getElementById("client_contact").getContext("2d")).Line(client_contact);
+                    var capital_increment_Line = new Chart(document.getElementById("capital_increment").getContext("2d")).Line(capital_increment);
+                    var volume_Line = new Chart(document.getElementById("volume").getContext("2d")).Line(volume);
+                });
+                return false;
     }
     $(function(){
-        $.getJSON($SCRIPT_ROOT + '/boss/_statistics_allam_workplan_sum',
-                {},
-                function(data) {
-                    lineChartData.labels = data.labels;
-                    lineChartData.datasets = data.datasets;
-                    var myLine = new Chart(document.getElementById("myChart").getContext("2d")).Line(lineChartData);
-
-      });
-      return false;
-    })
-
-{#    var myLine = new Chart(document.getElementById("myChart").getContext("2d")).Line(lineChartData);#}
-
+        showChart();
+        $(".form-control").bind('change', function(){
+            showChart();
+        });
+    });
 </script>
 
 {% endblock %}

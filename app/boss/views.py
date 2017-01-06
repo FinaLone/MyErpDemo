@@ -8,6 +8,7 @@ from flask import render_template, redirect, url_for, jsonify, flash, request, c
 from datetime import datetime, timedelta
 from . import boss
 from .. import db
+from .forms import Statisticsamwp
 from ..models import WorkPlan, User
 
 '''
@@ -27,12 +28,19 @@ return-->[(datetime.date(2016, 12, 13),), (datetime.date(2016, 12, 24),), (datet
 
 @boss.route('/statistics_workplan', methods=["GET", "POST"])
 def statistics_workplan():
-
-    return render_template('boss/statistics_workplan.html')
+    form = Statisticsamwp()
+    return render_template('boss/statistics_workplan.html', form=form)
 
 #全体，一段时间，三项数值和
 @boss.route('/_statistics_allam_workplan_sum')
 def statistics_allam_workplan_sum():
+    am_id = request.args.get('am_id',0,type=int)
+    start_date = request.args.get('start_date')
+    end_date = request.args.get('end_date')
+    print am_id
+    print start_date
+    print end_date
+
     startdate=datetime.now().date()-timedelta(days=365)
     enddate=datetime.now().date()
     searchdata=db.session.query(WorkPlan.am_id,
@@ -40,8 +48,8 @@ def statistics_allam_workplan_sum():
                      db.func.sum(WorkPlan.capital_increment),
                      db.func.sum(WorkPlan.volume)
                      ).filter(db.and_(WorkPlan.tommorrowdate.between(startdate,enddate),
-                                   WorkPlan.flag==0)).group_by(WorkPlan.am_id).all()
-    am_id_name=db.session.query(User.name).filter(User.role_id==1).all()
+                                   WorkPlan.flag==0)).group_by(WorkPlan.am_id).order_by(WorkPlan.am_id).all()
+    am_id_name=db.session.query(User.name).filter(User.role_id==1).order_by(User.id).all()
 
     labels = []
     for am_name in am_id_name:
@@ -70,9 +78,11 @@ def statistics_allam_workplan_sum():
 			'pointColor' : "rgba(101,117,205,0.5)",
 			'pointStrokeColor' : "#fff",
 			'data' : volume}
-    datasets = [dict_client_contact,dict_capital_increment,dict_volume]
+    client_contact = [dict_client_contact]
+    capital_increment = [dict_capital_increment]
+    volume = [dict_volume]
 
-    return jsonify(labels=labels, datasets=datasets)
+    return jsonify(labels=labels, client_contact=client_contact, capital_increment=capital_increment, volume=volume)
 
 #单人，指定日期，三项数值
 def statistics_singleam_workplan(self, amid, thatday):
