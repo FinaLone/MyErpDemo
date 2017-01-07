@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}客户信息修改{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h1>Hello, {% if current_user.is_authenticated() %}{{ current_user.user_name }}{% else %}Stranger{% endif %}!</h1>
+        <h2>这里是客户信息修改页面</h2>
+</div>
+<div class="col-md-4">
+    {{ wtf.quick_form(form) }}
+</div>
+{% endblock %}
+{% block scripts %}
+    {{ super() }}
+    <script type="text/javascript">
+        $('#flag').val({{client_info.flag}});
+        $('#name').val('{{client_info.name}}');
+        $('#sex').val({{client_info.sex}});
+        $('#preference').val('{{client_info.preference}}');
+        $('#race').val('{{client_info.race}}');
+        $('#id_number').val('{{client_info.id_number}}');
+        $('#birthday').val('{{client_info.birthday}}');
+        //alert({{client_info.birthday}});
+        $('#account_number').val('{{client_info.account_number}}');
+        $('#phone_1').val('{{client_info.phone_1}}');
+        $('#phone_2').val('{{client_info.phone_2}}');
+        $('#phone_3').val('{{client_info.phone_3}}');
+        $('#qq').val('{{client_info.qq}}');
+        $('#weixin').val('{{client_info.weixin}}');
+        $('#email').val('{{client_info.email}}');
+        $('#occupation').val('{{client_info.occupation}}');
+        $('#workplace').val('{{client_info.workplace}}');
+        $('#home').val('{{client_info.home}}');
+        $('#hobby').val('{{client_info.hobby}}');
+        $('#birthday').attr('type', 'date');
+    </script>
+{% endblock %}
