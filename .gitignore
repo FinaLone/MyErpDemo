@@ -1,0 +1,7 @@
+app/models.pyc
+*.pyc
+*.pyc
+app/account_manager/forms.pyc
+config.pyc
+app/__init__.pyc
+app/email.pyc

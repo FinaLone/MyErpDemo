@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}客户信息查询{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h1>Hello, {% if current_user.is_authenticated() %}{{ current_user.user_name }}{% else %}Stranger{% endif %}!</h1>
+        <h2>这里是客户信息查询页面</h2>
+</div>
+<div id='search-form' class="col-md-4">
+    {{ wtf.quick_form(form) }}
+    <input class="btn btn-default" type="button" id="submit" value="查询"/>
+</div>
+<div class="col-md-8">
+    <h3>这里是查询结果</h3>
+    <div class="show-result" id="result">
+        <table id="show-table">
+            <!--<thead><tr><th>姓名</th><th>性别</th><th>是否开户</th>-->
+                                                   <!--<th>客户经理</th><th>投资偏好</th><th>职业</th><th>联系方式</th>-->
+                                                   <!--</tr></thead>-->
+        </table>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+    {{ super() }}
+    <script type="text/javascript">
+    $.fn.serializeObject = function(){
+        var o = {};
+        var a = this.serializeArray();
+        $.each(a, function() {
+            if (o[this.name] !== undefined) {
+                if (!o[this.name].push) {
+                    o[this.name] = [o[this.name]];
+                }
+                o[this.name].push(this.value || '');
+            } else {
+                o[this.name] = this.value || '';
+            }
+        });
+        return o;
+    };
+    $('#submit').click(function(){
+        console.log('submit clicked');
+        data=JSON.stringify($('div#search-form form').serializeObject());
+
+
+         //////////////////////////////////////
+        var csrftoken = $('meta[name=csrf-token]').attr('content') // csrf验证
+        $.ajaxSetup({
+            beforeSend: function(xhr, settings) {
+                if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken)
+                }
+            }
+        })
+        /////////////////////////////////////
+        $.ajax({
+                    cache: true,
+                    type: "POST",
+                    url:'./clientinfo_search_sql',
+                    data:data,
+                    async: false,
+                    error: function(request) {
+                        alert("Connection error");
+                    },
+                    success: function(data) {
+                        //alert(data)
+                       var data = eval('('+data+')');
+                       $('#result').empty();
+                       $('#result').html('<table id="show-table"><thead><tr><th>姓名</th><th>性别</th><th>是否开户</th>'+
+                                          '<th>投资偏好</th><th>职业</th><th>联系方式</th><th>修改</th></tr></thead></table>');
+                       /*i=0;
+                       for(i;i<data.len;i++){
+                           $('#result').append("<p>id:"+data.data[i].id+
+                                                "name:"+data.data[i].name+
+                                                "sex:"+data.data[i].sex+"</p>");
+                       }*/
+                       griddata = data.data;
+                       for(i=0;i<data.len;i++){
+                            griddata[i].action = "<a href='./clientinfo_change/"+griddata[i].id+"'>修改</a>";
+                       }
+                       //alert(griddata);
+                       $('#show-table').DataTable({
+                            data:griddata,
+                            columns: [
+                                { data: 'name' },
+                                { data: 'sex' },
+                                { data: 'flag' },
+                                { data: 'preference' },
+                                { data: 'occupation' },
+                                { data: 'phone_1' },
+                                { data: 'action' }
+                            ]
+                       });
+                    }
+                });
+         });
+    </script>
+{% endblock %}
