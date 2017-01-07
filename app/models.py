@@ -228,8 +228,25 @@ class ClientInfo(db.Model):
     def to_json(self):
         return {
             'id': self.id,
+            'am_id': self.am_id,
+            'flag': self.flag,
             'name': self.name,
             'sex': self.sex,
+            'preference': self.preference,
+            'race': self.race,
+            'id_number': self.id_number,
+            'birthday': self.birthday.strftime('%Y-%m-%d'),
+            'account_number': self.account_number,
+            'phone_1': self.phone_1,
+            'phone_2': self.phone_2,
+            'phone_3': self.phone_3,
+            'qq': self.qq,
+            'weixin': self.weixin,
+            'email': self.email,
+            'occupation': self.occupation,
+            'workplace': self.workplace,
+            'home': self.home,
+            'hobby': self.hobby
         }
 
 # 问题列表 luhao add 16.11.17
