@@ -8,22 +8,10 @@ from flask import render_template, redirect, url_for, jsonify, flash, request, c
 from datetime import datetime, timedelta
 from . import boss
 from .. import db
-from .forms import StatisticsWorkplanForm, ReviewAMWorkPlanForm
+from .forms import StatisticsWorkplanForm, ReviewAMWorkPlanForm, NotificationForm
 from ..models import WorkPlan, User
 from ..decorators import CJsonEncoder
 import json
-
-'''
-db.session.query(ClientInfo.am_id,db.func.count()).filter(ClientInfo.flag==0).group_by(ClientInfo.am_id).all()
-db.session.query(ClientInfo.am_id,db.func.sum(ClientInfo.flag)).group_by(ClientInfo.am_id).all()
-db.session.query(WorkPlan.am_id,db.func.sum(WorkPlan.client_contact),db.func.sum(WorkPlan.capital_increment),db.func.sum(WorkPlan.volume)).group_by(WorkPlan.am_id).all()
-
-db.session.query(WorkPlan.am_id,db.func.sum(WorkPlan.client_contact),db.func.sum(WorkPlan.capital_increment),db.func.sum(WorkPlan.volume)).group_by(WorkPlan.am_id).all()
-return--> [(1, 11, 11, 11), (2, 4, 4, 4), (3, 12, 2, 2), (4, 10, 10, 10)]
-
-db.session.query(WorkPlan.todaydate).filter(WorkPlan.todaydate.between(thatday,today)).all()
-return-->[(datetime.date(2016, 12, 13),), (datetime.date(2016, 12, 24),), (datetime.date(2016, 12, 24),)]
-'''
 
 #统计信息，单人时间段内三项数值，全体时间段内单项数值
 #时间段为了显示方便，不要弄太长，主要是保证列数不要太多就好
@@ -133,3 +121,9 @@ def review_single_am_workplan():
     volume = [dict_volume]
 
     return jsonify(labels=labels, client_contact=client_contact, capital_increment=capital_increment, volume=volume)
+
+@boss.route('/notification', methods=["GET", "POST"])
+def notification():
+    form = NotificationForm()
+    todaydate = datetime.now().date()
+    return render_template('boss/notification.html', form=form)

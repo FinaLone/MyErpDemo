@@ -31,6 +31,7 @@ class Role(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True)
     default = db.Column(db.Boolean, default=False, index= True)
+    name_chinese = db.Column(db.String(64), unique=True)
     permissions = db.Column(db.Integer)
 
     users = db.relationship('User', backref='role', lazy='dynamic')
@@ -40,10 +41,10 @@ class Role(db.Model):
     #insert_droles函数在添加新的职务时需要在shell里面执行一次
     def insert_roles():
         roles = {
-            'SuperAdmin': (0xff, False),
-            'AM':(Permission.ACCOUNTMANAGER, False),
-            'FM':(Permission.FINANCIALMANAGER, False),
-            'BOSS':(Permission.BOSS, False)
+            'SuperAdmin': (0xff, False, unicode('管理员')),
+            'AM':(Permission.ACCOUNTMANAGER, False, unicode('客户经理')),
+            'FM':(Permission.FINANCIALMANAGER, False, unicode('财务')),
+            'BOSS':(Permission.BOSS, False, unicode('总经理'))
         }
         for r in roles:
             role = Role.query.filter_by(name=r).first()
@@ -51,6 +52,7 @@ class Role(db.Model):
                 role = Role(name=r)
             role.permissions = roles[r][0]
             role.default = roles[r][1]
+            role.name_chinese = roles[r][2]
             db.session.add(role)
         db.session.commit()
 
