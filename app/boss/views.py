@@ -5,11 +5,12 @@ reload(sys)
 sys.setdefaultencoding('utf8')
 
 from flask import render_template, redirect, url_for, jsonify, flash, request, current_app
+from flask_login import login_user, logout_user, login_required, current_user
 from datetime import datetime, timedelta
 from . import boss
 from .. import db
 from .forms import StatisticsWorkplanForm, ReviewAMWorkPlanForm, NotificationForm
-from ..models import WorkPlan, User
+from ..models import WorkPlan, User, Notification, ReadNotification
 from ..decorators import CJsonEncoder
 import json
 
@@ -125,5 +126,36 @@ def review_single_am_workplan():
 @boss.route('/notification', methods=["GET", "POST"])
 def notification():
     form = NotificationForm()
-    todaydate = datetime.now().date()
+    publish_datetime = datetime.now()
+    target_role_id = form.target.data
+    if form.validate_on_submit():
+        newNotification=Notification(
+            publish_id = current_user.id,
+            target_role_id = target_role_id,
+            title = form.title.data,
+            body = form.title.data,
+            publish_datetime = publish_datetime
+        )
+        db.session.add(newNotification)
+        db.session.commit()
+
+        notification_id=db.session.query(Notification.id).filter(
+            Notification.publish_datetime==publish_datetime).first()[0]
+        print notification_id
+        users=db.session.query(User.id).filter(User.flag==1).all()     #默认发给所有人
+        print users
+        if target_role_id!=0:
+            users=db.session.query(User.id).filter(
+                db.and_(User.role_id==target_role_id,
+                        User.flag==1)).all()
+        print users
+        for reader in users:
+            newReadNotification=ReadNotification(
+                reader_id = reader.id,
+                notification_id = notification_id
+            )
+            db.session.add(newReadNotification)
+        db.session.commit()
+        flash('通知已发布')
+        return redirect(url_for('boss.notification'))
     return render_template('boss/notification.html', form=form)

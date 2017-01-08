@@ -4,6 +4,28 @@
     <database-info product="SQLite" version="3.8.9" jdbc-version="2.1" driver-name="SQLiteJDBC" driver-version="native"/>
     <case-sensitivity plain-identifiers="mixed" quoted-identifiers="mixed"/>
     <schema name="" catalog=""/>
+    <table name="Notification" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <column name="publish_id" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <column name="target_role_id" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <column name="title" sqlType="VARCHAR" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="body" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="publish_datetime" sqlType="DATETIME" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <primary-key columns="id),foreign key(publish_id"/>
+      <foreign-key name="#FAKE_Notification_1" columns="publish_id" ref-table="TUserInfo" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <index name="ix_Notification_id" unique="true" columns="id"/>
+    </table>
+    <table name="ReadNotification" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <column name="reader_id" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <column name="notification_id" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <column name="confirmed" sqlType="BOOLEAN" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <column name="read_datetime" sqlType="DATETIME" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <primary-key columns="id),foreign key(notification_id"/>
+      <foreign-key name="#FAKE_ReadNotification_1" columns="reader_id" ref-table="TUserInfo" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_ReadNotification_2" columns="notification_id" ref-table="Notification" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <index name="ix_ReadNotification_id" unique="true" columns="id"/>
+    </table>
     <table name="TClientInfo" schema="" catalog="" type="TABLE">
       <column name="id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
       <column name="am_id" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
@@ -41,7 +63,9 @@
       <column name="name" sqlType="VARCHAR(64)" precision="0" scale="-1" nullable="true" jdbcType="12"/>
       <column name="default" sqlType="BOOLEAN" precision="0" scale="-1" nullable="true" jdbcType="4"/>
       <column name="permissions" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <column name="name_chinese" sqlType="VARCHAR(64)" precision="0" scale="-1" nullable="true" jdbcType="12"/>
       <primary-key columns="id),unique (name"/>
+      <exported-key name="#FAKE_TUserInfo_1" table="TUserInfo" schema="" catalog="" columns="role_id"/>
       <exported-key name="#FAKE_TUserInfo_1" table="TUserInfo" schema="" catalog="" columns="role_id"/>
       <index name="ix_TRoleInfo_default" unique="true" columns="default"/>
     </table>
@@ -57,8 +81,15 @@
       <column name="name" sqlType="VARCHAR(64)" precision="0" scale="-1" nullable="true" jdbcType="12"/>
       <column name="location" sqlType="VARCHAR(64)" precision="0" scale="-1" nullable="true" jdbcType="12"/>
       <column name="about_me" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="flag" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
       <primary-key columns="id),foreign key(role_id"/>
       <foreign-key name="#FAKE_TUserInfo_1" columns="role_id" ref-table="TRoleInfo" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <exported-key name="#FAKE_TClientInfo_1" table="TClientInfo" schema="" catalog="" columns="am_id"/>
+      <exported-key name="#FAKE_answers_2" table="answers" schema="" catalog="" columns="author_id"/>
+      <exported-key name="#FAKE_questions_1" table="questions" schema="" catalog="" columns="author_id"/>
+      <exported-key name="#FAKE_teexpense_1" table="teexpense" schema="" catalog="" columns="fm_id"/>
+      <exported-key name="#FAKE_teexpense_2" table="teexpense" schema="" catalog="" columns="am_id"/>
+      <exported-key name="#FAKE_workplan_1" table="workplan" schema="" catalog="" columns="am_id"/>
       <exported-key name="#FAKE_TClientInfo_1" table="TClientInfo" schema="" catalog="" columns="am_id"/>
       <exported-key name="#FAKE_answers_2" table="answers" schema="" catalog="" columns="author_id"/>
       <exported-key name="#FAKE_questions_1" table="questions" schema="" catalog="" columns="author_id"/>
@@ -92,6 +123,7 @@
       <column name="author_id" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
       <primary-key columns="id),foreign key(author_id"/>
       <foreign-key name="#FAKE_questions_1" columns="author_id" ref-table="TUserInfo" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <exported-key name="#FAKE_answers_1" table="answers" schema="" catalog="" columns="question_id"/>
       <exported-key name="#FAKE_answers_1" table="answers" schema="" catalog="" columns="question_id"/>
       <index name="ix_questions_timestamp" unique="true" columns="timestamp"/>
     </table>

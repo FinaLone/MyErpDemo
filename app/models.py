@@ -64,7 +64,7 @@ class Role(db.Model):
 class User(UserMixin, db.Model):#用shell插入新用户的时候，一定要注意不要忽略confirmed一项
     __tablename__ = 'TUserInfo'
     id = db.Column(db.Integer, primary_key=True)                    #用户编号,最好是自动生成，不能修改
-                                                                    #如果有冻结账户的需要，另设flag位
+    flag = db.Column(db.Integer, default=1)                         #可用为1，冻结为0
     role_id = db.Column(db.Integer, db.ForeignKey('TRoleInfo.id'))
     email = db.Column(db.String(64), unique=True, index=True)
     user_name = db.Column(db.String(64), unique=True, index=True)   #登陆用用户名
@@ -81,6 +81,8 @@ class User(UserMixin, db.Model):#用shell插入新用户的时候，一定要注
     workplan = db.relationship('WorkPlan', backref='am', lazy='dynamic')
     teexpenxe_fm = db.relationship('TEExpense', primaryjoin='User.id==TEExpense.fm_id', backref='fm', lazy='dynamic')
     teexpenxe_am = db.relationship('TEExpense', primaryjoin='User.id==TEExpense.am_id', backref='am', lazy='dynamic')
+    notification = db.relationship('Notification', backref='publisherid', lazy='dynamic')
+    notification = db.relationship('ReadNotification', backref='readerid', lazy='dynamic')
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
@@ -316,3 +318,23 @@ class TEExpense(db.Model):
 
     def __reper__(self):
         return 'fm: %r -- am: %r' % (self.fm_id, self.am_id)
+
+class Notification(db.Model):
+    __tablename__ = 'Notification'
+    id = db.Column(db.Integer, primary_key=True, index=True)
+    publish_id = db.Column(db.Integer, db.ForeignKey('TUserInfo.id'))
+    target_role_id = db.Column(db.Integer)
+    title = db.Column(db.String)
+    body = db.Column(db.Text)
+    publish_datetime = db.Column(db.DateTime)
+
+    target = db.relationship('ReadNotification', backref='Notification', lazy='dynamic')
+
+class ReadNotification(db.Model):
+    __tablename__ = 'ReadNotification'
+    id = db.Column(db.Integer, primary_key=True, index=True)
+    reader_id = db.Column(db.Integer, db.ForeignKey('TUserInfo.id'))
+    notification_id = db.Column(db.Integer, db.ForeignKey('Notification.id'))
+    confirmed = db.Column(db.Boolean, default=False)
+    read_datetime = db.Column(db.DateTime)
+

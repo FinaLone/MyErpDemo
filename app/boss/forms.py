@@ -5,7 +5,7 @@ reload(sys)
 sys.setdefaultencoding('utf8')
 
 from flask.ext.wtf import Form
-from wtforms import StringField, IntegerField, SubmitField, DateField, SelectField, TextAreaField, validators
+from wtforms import StringField, SubmitField, DateField, SelectField, TextAreaField, validators
 from wtforms.validators import Required
 from ..models import User, Role
 from datetime import datetime, timedelta
@@ -38,15 +38,13 @@ class NotificationForm(Form):
     target = SelectField('通知对象', coerce=int, validators=[Required()])
     title =  StringField('标题', validators=[Required()])
     body = TextAreaField('详细描述' , validators=[Required()])
+    submit = SubmitField('发布')
 
     def __init__(self, *args, **kwargs):
         super(NotificationForm, self).__init__(*args, **kwargs)
         roles=Role.query.all()
-        print roles
         choices=[(role.id, role.name_chinese) for role in roles]
-        print choices
         choices.append((0, unicode('所有人')))
-        print choices
         self.target.choices=choices
 
 
