@@ -44,7 +44,7 @@ class NotificationForm(Form):
         super(NotificationForm, self).__init__(*args, **kwargs)
         roles=Role.query.all()
         choices=[(role.id, role.name_chinese) for role in roles]
-        choices.append((0, unicode('所有人')))
+        choices.append((99, unicode('所有人')))
         self.target.choices=choices
 
 

@@ -31,6 +31,9 @@ def am_required(f):
 def fm_required(f):
     return permission_required(Permission.FINANCIALMANAGER)(f)
 
+def boss_required(f):
+    return permission_required(Permission.BOSS)(f)
+
 
 class CJsonEncoder(json.JSONEncoder):
     def default(self, obj):

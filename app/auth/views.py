@@ -4,12 +4,12 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
 
-from flask import render_template, redirect, request, url_for, flash
+from flask import render_template, redirect, request, url_for, flash, jsonify
 from flask_login import login_user, logout_user, login_required, \
     current_user
 from . import auth
 from .. import db
-from ..models import User
+from ..models import User, ReadNotification
 from ..email import send_email
 from .forms import LoginForm, RegistrationForm, ChangePasswordForm,\
     PasswordResetRequestForm, PasswordResetForm, ChangeEmailForm
@@ -167,3 +167,14 @@ def change_email(token):
     else:
         flash('无效的请求。')
     return redirect(url_for('main.index'))
+
+@auth.route('/_getUnreadNum')
+def _getUnreadNum():
+    my_id = current_user.id
+    print my_id
+
+    unreadNum = db.session.query(db.func.count('*').label("id")).filter(
+        db.and_(ReadNotification.reader_id==my_id,
+                ReadNotification.confirmed==False)).first()
+    print unreadNum
+    return jsonify(unreadNum=str(unreadNum[0]))

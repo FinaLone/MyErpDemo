@@ -11,19 +11,21 @@ from . import boss
 from .. import db
 from .forms import StatisticsWorkplanForm, ReviewAMWorkPlanForm, NotificationForm
 from ..models import WorkPlan, User, Notification, ReadNotification
-from ..decorators import CJsonEncoder
+from ..decorators import CJsonEncoder, boss_required
 import json
 
 #统计信息，单人时间段内三项数值，全体时间段内单项数值
 #时间段为了显示方便，不要弄太长，主要是保证列数不要太多就好
 
 @boss.route('/statistics_workplan', methods=["GET", "POST"])
+@boss_required
 def statistics_workplan():
     form = StatisticsWorkplanForm()
     return render_template('boss/statistics_workplan.html', form=form)
 
 #全体，一段时间，三项数值和
 @boss.route('/_statistics_allam_workplan_sum')
+@boss_required
 def statistics_allam_workplan_sum():
     # am_id = request.args.get('am_id',0,type=int)
     startdate = request.args.get('start_date')
@@ -72,11 +74,13 @@ def statistics_allam_workplan_sum():
 
 #单人，指定日期，三项数值
 @boss.route('/review_am_workplan', methods=["GET", "POST"])
+@boss_required
 def review_am_workplan():
     form = ReviewAMWorkPlanForm()
     return render_template('boss/review_am_workplan.html', form=form)
 
 @boss.route('/_review_single_am_workplan')
+@boss_required
 def review_single_am_workplan():
     amid = request.args.get('am_id',0,type=int)
     startdate = request.args.get('start_date')
@@ -124,6 +128,7 @@ def review_single_am_workplan():
     return jsonify(labels=labels, client_contact=client_contact, capital_increment=capital_increment, volume=volume)
 
 @boss.route('/notification', methods=["GET", "POST"])
+@boss_required
 def notification():
     form = NotificationForm()
     publish_datetime = datetime.now()
@@ -141,14 +146,11 @@ def notification():
 
         notification_id=db.session.query(Notification.id).filter(
             Notification.publish_datetime==publish_datetime).first()[0]
-        print notification_id
         users=db.session.query(User.id).filter(User.flag==1).all()     #默认发给所有人
-        print users
-        if target_role_id!=0:
+        if target_role_id!=99:
             users=db.session.query(User.id).filter(
                 db.and_(User.role_id==target_role_id,
                         User.flag==1)).all()
-        print users
         for reader in users:
             newReadNotification=ReadNotification(
                 reader_id = reader.id,
