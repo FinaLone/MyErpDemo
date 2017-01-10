@@ -9,7 +9,7 @@ from flask_login import login_user, logout_user, login_required, \
     current_user
 from . import auth
 from .. import db
-from ..models import User, ReadNotification
+from ..models import User, ReadNotification, Notification
 from ..email import send_email
 from .forms import LoginForm, RegistrationForm, ChangePasswordForm,\
     PasswordResetRequestForm, PasswordResetForm, ChangeEmailForm
@@ -171,10 +171,22 @@ def change_email(token):
 @auth.route('/_getUnreadNum')
 def _getUnreadNum():
     my_id = current_user.id
-    print my_id
-
     unreadNum = db.session.query(db.func.count('*').label("id")).filter(
         db.and_(ReadNotification.reader_id==my_id,
                 ReadNotification.confirmed==False)).first()
-    print unreadNum
     return jsonify(unreadNum=str(unreadNum[0]))
+
+@auth.route('/unreadnotification')
+def unreadnotification():
+    unreadnotification_ids = db.session.query(ReadNotification.notification_id).filter(
+        db.and_(ReadNotification.reader_id==current_user.id,
+                ReadNotification.confirmed==False)).all()
+    unread_notes=[]
+    if unreadnotification_ids is not None:
+        for unread_id in unreadnotification_ids:
+            single_notification = db.session.query(
+                Notification.title,
+                Notification.body).filter(Notification.id==unread_id[0]).first()
+            temp = [single_notification[0], single_notification[1]]
+            unread_notes.append(temp)
+    return render_template("auth/unreadnotification.html", unread_notes=unread_notes)

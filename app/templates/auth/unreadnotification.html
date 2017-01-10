@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}MyErpDemo{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h1>Hello, {% if current_user.is_authenticated() %}{{ current_user.user_name }}{% else %}Stranger{% endif %}!</h1>
+</div>
+<ul class = "unreadnotifications">
+
+    <div class="col-sm-6">
+        <h3 class="row header smaller lighter blue">
+            <span class="col-xs-6"> Accordion </span><!-- /span -->
+        </h3>
+        {% for unread_note in unread_notes %}
+
+        <div id="accordion" class="accordion-style1 panel-group">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                            <i class="bigger-110 icon-angle-right" data-icon-hide="icon-angle-down" data-icon-show="icon-angle-right"></i>
+                            &nbsp;{{ unread_note[0] }}
+                        </a>
+                    </h4>
+                </div>
+
+                <div class="panel-collapse collapse" id="collapseOne" style="height: 0px;">
+                    <div class="panel-body">
+                        {{ unread_note[1] }}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
+
+        </div>
+    </div>
+</ul>
+
+{% endblock %}
