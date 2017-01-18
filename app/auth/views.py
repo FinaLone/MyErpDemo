@@ -13,6 +13,7 @@ from ..models import User, ReadNotification, Notification
 from ..email import send_email
 from .forms import LoginForm, RegistrationForm, ChangePasswordForm,\
     PasswordResetRequestForm, PasswordResetForm, ChangeEmailForm
+from datetime import datetime, timedelta
 
 
 @auth.before_app_request
@@ -187,8 +188,14 @@ def unreadnotification():
         for unread_id in unreadnotification_ids:
             single_notification = db.session.query(
                 Notification.title,
-                Notification.body).filter(Notification.id==unread_id[0]).first()
-            temp = [i,single_notification[0], single_notification[1]]
+                Notification.body,
+                Notification.publish_datetime).filter(Notification.id==unread_id[0]).first()
+            temp = [i,single_notification[0], single_notification[1],single_notification[2]]
             i = i + 1
             unread_notes.append(temp)
     return render_template("auth/unreadnotification.html", unread_notes=unread_notes)
+
+@auth.route('/mark_read')
+@login_required
+def _mark_read():
+    amid = request.args.get('publish_datetime')

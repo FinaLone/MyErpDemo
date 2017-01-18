@@ -82,7 +82,7 @@ class User(UserMixin, db.Model):#用shell插入新用户的时候，一定要注
     teexpenxe_fm = db.relationship('TEExpense', primaryjoin='User.id==TEExpense.fm_id', backref='fm', lazy='dynamic')
     teexpenxe_am = db.relationship('TEExpense', primaryjoin='User.id==TEExpense.am_id', backref='am', lazy='dynamic')
     notification = db.relationship('Notification', backref='publisherid', lazy='dynamic')
-    notification = db.relationship('ReadNotification', backref='readerid', lazy='dynamic')
+    readnotification = db.relationship('ReadNotification', backref='readerid', lazy='dynamic')
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)

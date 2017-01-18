@@ -92,7 +92,7 @@
                         </li>
                         <li>
                             <a href="{{ url_for('auth.unreadnotification') }}">
-                                查看所有通知
+                                查看未读通知
                             <i class="icon-arrow-right"></i>
                             </a>
                         </li>
@@ -137,6 +137,7 @@
 <script type="text/javascript">
   var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 </script>
+{% if current_user.is_authenticated() %}
 <script type="text/javascript">
     function getUnreadNum() {
         $.getJSON($SCRIPT_ROOT + '/auth/_getUnreadNum',
@@ -155,4 +156,5 @@
     $(function(){getUnreadNum();});
 
 </script>
+{% endif %}
 {% endblock %}

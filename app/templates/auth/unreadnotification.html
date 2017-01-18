@@ -10,7 +10,7 @@
 
     <div class="col-sm-6">
         <h3 class="row header smaller lighter blue">
-            <span class="col-xs-6"> Accordion </span><!-- /span -->
+            <span class="col-xs-6"> 未读通知 </span><!-- /span -->
         </h3>
 
         <div id="accordion" class="accordion-style1 panel-group">
@@ -21,7 +21,7 @@
                         <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion"
                          href= "#collapse{{ unread_note[0] }}" >
                             <i class="bigger-110 icon-angle-right" data-icon-hide="icon-angle-down" data-icon-show="icon-angle-right"></i>
-                            &nbsp;{{ unread_note[1] }}
+                            {{ unread_note[1] }}&nbsp;&nbsp;&nbsp;&nbsp;发布于：{{ unread_note[3] }}
                         </a>
                     </h4>
                 </div>
