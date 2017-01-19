@@ -17,13 +17,18 @@
         {% for unread_note in unread_notes %}
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h4 class="panel-title">
-                        <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion"
-                         href= "#collapse{{ unread_note[0] }}" >
+                    <div class="panel-title row">
+                        <div class="col-md-6">
+                            <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion"
+                                 href= "#collapse{{ unread_note[0] }}" >
                             <i class="bigger-110 icon-angle-right" data-icon-hide="icon-angle-down" data-icon-show="icon-angle-right"></i>
-                            {{ unread_note[1] }}&nbsp;&nbsp;&nbsp;&nbsp;发布于：{{ unread_note[3] }}
+                                {{ unread_note[1] }}
                         </a>
-                    </h4>
+                        </div>
+                        <div class="col-md-6">
+                            <span style="text-align:right">发布于：{{ unread_note[3] }}</span>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="panel-collapse collapse" id="collapse{{ unread_note[0] }}" style="height: 0px;">

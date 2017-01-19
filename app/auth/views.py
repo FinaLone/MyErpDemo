@@ -190,7 +190,7 @@ def unreadnotification():
                 Notification.title,
                 Notification.body,
                 Notification.publish_datetime).filter(Notification.id==unread_id[0]).first()
-            temp = [i,single_notification[0], single_notification[1],single_notification[2]]
+            temp = [i,single_notification[0], single_notification[1],single_notification[2].strftime('%Y-%m-%d %H:%M:%S')]
             i = i + 1
             unread_notes.append(temp)
     return render_template("auth/unreadnotification.html", unread_notes=unread_notes)
